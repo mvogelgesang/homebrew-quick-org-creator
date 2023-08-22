@@ -48,12 +48,21 @@ fi
 # create the scratch org and project folder. 
 # Once done, open folder in code and install dependencies
 sf org create scratch -f $scratchDef -a $alias -v $devHub -w 10 -y 21
+sf org resume scratch --use-most-recent
 sf config set target-org=$alias
 sf project generate -t standard -n $datedAlias -d $folder
 code $folder/$datedAlias
 cd $folder/$datedAlias
 echo "Installing dependencies"
 npm i
+
+echo "Creating pre-commit hook for Code Analyzer"
+echo -e "// lint-staged.config.js
+module.exports = {
+  \"**/*.cls\": (filenames) => \"sf scanner run -f table -s 3 -t \" + filenames.join(\", \") 
+};
+" > lint-staged.config.js
+
 echo "Opening the new org"
 sf org open -o $alias
 echo "You will need to authenticate your new org"

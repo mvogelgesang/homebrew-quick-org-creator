@@ -4,7 +4,7 @@
   "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10"],
   "settings": {
     "orgPreferenceSettings": {
-      "s1EncryptedStoragePref2": false
+      "s1EncryptedStoragePref2": true
     },
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
