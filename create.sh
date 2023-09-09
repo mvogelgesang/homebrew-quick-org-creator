@@ -49,10 +49,14 @@ fi
 # Once done, open folder in code and install dependencies
 sf org create scratch -f $scratchDef -a $alias -v $devHub -w 10 -y 21
 sf org resume scratch --use-most-recent
-sf config set target-org=$alias
+echo "Scratch org creation done"
+echo "Setting target-org and generating project"
 sf project generate -t standard -n $datedAlias -d $folder
 code $folder/$datedAlias
 cd $folder/$datedAlias
+sf config set target-org=$alias
+echo "Resetting the password"
+sf org generate password --complexity 3
 echo "Installing dependencies"
 npm i
 
