@@ -1,7 +1,7 @@
 {
   "orgName": "mvogelgesang company",
-  "edition": "Developer",
-  "features": ["Communities","EnableSetPasswordInApi", "MaxApexCodeSize:10"],
+  "edition": "Partner Developer",
+  "features": ["Communities", "EnableSetPasswordInApi", "MaxApexCodeSize:10"],
   "settings": {
     "communitiesSettings": {
       "enableNetworksEnabled": true
@@ -14,6 +14,9 @@
     },
     "mobileSettings": {
       "enableS1EncryptedStoragePref2": false
+    },
+    "orgPreferenceSettings": {
+      "s1EncryptedStoragePref2": false
     },
     "securitySettings": {
       "sessionSettings": {
