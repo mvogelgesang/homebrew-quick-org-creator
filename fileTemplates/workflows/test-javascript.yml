@@ -1,0 +1,19 @@
+name: Test JavaScript
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+jobs:
+  pretify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run test
