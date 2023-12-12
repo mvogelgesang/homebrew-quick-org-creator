@@ -1,0 +1,29 @@
+{
+  "orgName": "mvogelgesang company",
+  "edition": "Developer",
+  "country": "US",
+  "features": ["EventLogFile", "PersonAccounts"],
+  "hasSampleData": true,
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "eventSettings": {
+      "enableEventLogGeneration": true,
+      "enableTransactionSecurityPolicies": true,
+      "enableDeleteMonitoringData": true,
+      "enableLoginForensics": true,
+      "enableStreamingApi": true,
+      "enableDynamicStreamingChannel": false,
+      "bypassMeteringBlock" :false
+    },
+    "securitySettings": {
+      "sessionSettings": {
+        "sessionTimeout": "TwelveHours"
+      }
+    }
+  }
+}
