@@ -71,12 +71,19 @@ datedAlias+=$alias
 
 # user can override the scratch definition if desired
 echo ""
-echo -e "${cCyan}Scratch Definition (leave blank for default $scratchDef)${cNoColor}"
-read s
-if [ ! -z "$s" ]
-  then
-    scratchDef=$s
-fi
+echo -e "${cCyan}Scratch Definition (Enter 0 for default "$scratchDef")${cNoColor}"
+  select file in ..scratchDefs/*.json; do
+    if [ $REPLY == "0" ]; then
+      echo Default chosen
+      break;
+    elif [[ -z $file ]]; then
+      echo -e "${cYellow}Invalid selection, try again${cNoColor}" >&2
+    else
+      scratchDef=$file
+      break;
+    fi
+done
+echo Scratch definition set: $scratchDef
 
 # default parent folder is set but can be overridden
 echo ""
