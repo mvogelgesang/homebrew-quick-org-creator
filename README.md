@@ -5,10 +5,14 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Setup
 
 - Clone into folder where you manage your development projects. Mine is called `~/Develop`
-- Open `create.sh` in your editor and update `devHub` and `folder` variables to your desired defaults
 - Run it from your development project folder `./utilities/create.sh`
+- Running for the first time will create a config file to hold defaults for devhub org, parent folder, and scratch org definitions.
 
-New org will be created, browser will open to org, VSCode will open new window.
+## Outputs
+
+- New Salesforce scratch org from desired devHub with specified org definition
+- New project directory with org set as default target
+- Initialized Git repo and creation of private GitHub repo
 
 ## Backlog
 
