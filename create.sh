@@ -3,9 +3,14 @@
 ## Script variables, update as necessary ##
 alias=""
 datedAlias=$(date '+%Y%m%d')_
-scratchDef="utilities/..scratchDefs/default.json"
-devHub="pboDevHub"
-folder="pboDevHub"
+if test -f .config; then
+  source .config
+  else
+  echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
+  sh ./config.sh
+  source .config
+fi
+
 github=false
 currentWorkingDirectory=$(pwd)
 
