@@ -3,12 +3,12 @@
 ## Script variables, update as necessary ##
 alias=""
 datedAlias=$(date '+%Y%m%d')_
-if test -f .config; then
-  source .config
+if test -f ./utilities/.config; then
+  source ./utilities/.config
   else
   echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
-  sh ./config.sh
-  source .config
+  sh ./utilities/config.sh
+  source ./utilities/.config
 fi
 
 github=false
@@ -30,6 +30,14 @@ bLightBlue='\033[0;104m'
 bLightCyan='\033[0;106m'
 cNoColor='\033[0;0m'
 arrow="  -> "
+
+echo "
+===================================================
+ __   __   __      __   __   ___      ___  __   __  
+/  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
+\__/ |  \ \__>    \__, |  \ |___ /~~\  |  \__/ |  \\
+=================================================== 
+"                                                    
 
 ## Start script
 echo "DevHub (leave blank for default $devHub)"
@@ -72,7 +80,7 @@ datedAlias+=$alias
 # user can override the scratch definition if desired
 echo ""
 echo -e "${cCyan}Scratch Definition (Enter 0 for default "$scratchDef")${cNoColor}"
-  select file in ..scratchDefs/*.json; do
+  select file in ./utilities/..scratchDefs/*.json; do
     if [ $REPLY == "0" ]; then
       echo Default chosen
       break;
