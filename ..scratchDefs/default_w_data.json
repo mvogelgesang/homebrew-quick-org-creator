@@ -1,5 +1,5 @@
 {
-  "orgName": "mvogelgesang company",
+  "orgName": "my company",
   "edition": "Developer",
   "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10"],
   "hasSampleData": true,
