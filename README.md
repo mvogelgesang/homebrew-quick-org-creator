@@ -5,7 +5,10 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Setup
 
 - Clone into folder where you manage your development projects. Mine is called `~/Develop`
-- Run it from your development project folder `./utilities/create.sh`
+- Add an alias, `oc` to your `.zshrc` or `.bashrc` file that points to your installation location.
+  - `echo '\nalias oc="~/Develop/utilities"' >> ~/.zshrc`
+- Reload your `.zshrc` in the terminal: `source ~/.zshrc`
+- Run from anywhere: `oc`
 - Running for the first time will create a config file to hold defaults for devhub org, parent folder, and scratch org definitions.
 
 ## Outputs

@@ -3,12 +3,13 @@
 ## Script variables, update as necessary ##
 alias=""
 datedAlias=$(date '+%Y%m%d')_
-if test -f ./utilities/.config; then
-  source ./utilities/.config
+installedDir="`dirname $0`"
+if test -f "${installedDir}/.config"; then
+  source "${installedDir}/.config"
   else
   echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
-  sh ./utilities/config.sh
-  source ./utilities/.config
+  sh "${installedDir}/config.sh"
+  source "${installedDir}/.config"
 fi
 
 github=false
@@ -31,13 +32,13 @@ bLightCyan='\033[0;106m'
 cNoColor='\033[0;0m'
 arrow="  -> "
 
-echo "
+echo -e "${cMagenta}
 ===================================================
  __   __   __      __   __   ___      ___  __   __  
 /  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
 \__/ |  \ \__>    \__, |  \ |___ /~~\  |  \__/ |  \\
 =================================================== 
-"                                                    
+${cNoColor}"                                                    
 
 ## Start script
 echo "DevHub (leave blank for default $devHub)"
