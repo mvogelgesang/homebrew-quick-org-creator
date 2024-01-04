@@ -81,7 +81,7 @@ datedAlias+=$alias
 # user can override the scratch definition if desired
 echo ""
 echo -e "${cCyan}Scratch Definition (Enter 0 for default "$scratchDef")${cNoColor}"
-  select file in ./utilities/..scratchDefs/*.json; do
+  select file in "${installedDir}/..scratchDefs/"*.json; do
     if [ $REPLY == "0" ]; then
       echo Default chosen
       break;
