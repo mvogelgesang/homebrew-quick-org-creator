@@ -2,7 +2,7 @@
   "orgName": "my company",
   "edition": "Developer",
   "country": "US",
-  "features": ["EventLogFile", "PersonAccounts"],
+  "features": ["EventLogFile", "PersonAccounts", "EinsteinGPTForDevelopers"],
   "hasSampleData": true,
   "settings": {
     "lightningExperienceSettings": {

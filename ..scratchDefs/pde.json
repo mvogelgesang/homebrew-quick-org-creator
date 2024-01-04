@@ -1,16 +1,13 @@
 {
   "orgName": "my company",
   "edition": "Partner Developer",
-  "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10"],
+  "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10", "EinsteinGPTForDevelopers"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
     },
     "mobileSettings": {
       "enableS1EncryptedStoragePref2": false
-    },
-    "orgPreferenceSettings": {
-      "s1EncryptedStoragePref2": false
     },
     "securitySettings": {
       "sessionSettings": {

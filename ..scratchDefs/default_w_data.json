@@ -1,7 +1,7 @@
 {
   "orgName": "my company",
   "edition": "Developer",
-  "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10"],
+  "features": ["EnableSetPasswordInApi", "MaxApexCodeSize:10", "EinsteinGPTForDevelopers"],
   "hasSampleData": true,
   "settings": {
     "orgPreferenceSettings": {
