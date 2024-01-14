@@ -3,15 +3,8 @@
 ## Script variables, update as necessary ##
 alias=""
 datedAlias=$(date '+%Y%m%d')_
+update="N"
 installedDir="`dirname $0`"
-if test -f "${installedDir}/.config"; then
-  source "${installedDir}/.config"
-  else
-  echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
-  sh "${installedDir}/config.sh"
-  source "${installedDir}/.config"
-fi
-
 github=false
 currentWorkingDirectory=$(pwd)
 
@@ -31,6 +24,34 @@ bLightBlue='\033[0;104m'
 bLightCyan='\033[0;106m'
 cNoColor='\033[0;0m'
 arrow="  -> "
+
+## update check https://www.christianengvall.se/check-for-changes-on-remote-origin-git-repository/
+git fetch
+ HEADHASH=$(git rev-parse HEAD)
+ UPSTREAMHASH=$(git rev-parse main@{upstream})
+
+ if [ "$HEADHASH" != "$UPSTREAMHASH" ]
+ then
+   echo -e ${cLightBlue}Updates available, do you want to update? \[Y/N\]${NOCOLOR}
+   read u
+    if [ "$u" == "Y" ] || [ "$u" == "y" ]
+      then
+        echo "Updating..."
+        git pull origin main
+    fi
+ else
+   echo -e ${FINISHED}Current branch is up to date with origin/main.${NOCOLOR}
+ fi
+
+if test -f "${installedDir}/.config"; then
+  source "${installedDir}/.config"
+  else
+  echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
+  sh "${installedDir}/config.sh"
+  source "${installedDir}/.config"
+fi
+
+
 
 echo -e "${cMagenta}
 ===================================================
