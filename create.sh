@@ -9,51 +9,54 @@ github=false
 currentWorkingDirectory=$(pwd)
 
 ## Colors
-cWhite='\033[0;37m'
-cBlue='\033[0;34m' 
-cCyan='\033[0;36m'
-cLightCyan='\033[0;96m'
-cLightBlue='\033[0;94m'
-cGreen='\033[0;32m'
-cYellow='\033[0;33m'
-cMagenta='\033[0;35m'
-cRed='\033[0;31m'
-bBlue='\033[0;44m'
-bCyan='\033[0;46m'
-bLightBlue='\033[0;104m'
-bLightCyan='\033[0;106m'
-cNoColor='\033[0;0m'
+WHITE='\033[0;37m' #cWhite
+# ='\033[0;34m'  #cBlue
+# ='\033[0;36m' #cCyan
+QUESTION='\033[0;96m' #cLightCyan
+#='\033[0;94m' #cLightBlue
+SUCCESS='\033[0;32m' #cGreen
+WARN='\033[0;33m' #cYellow
+THEME='\033[0;35m' #cMagenta
+ERROR='\033[0;31m' #cRed
+NOTIFICATION='\033[0;44m' #bBlue
+#='\033[0;46m' #bCyan
+#='\033[0;104m' #bLightBlue
+#='\033[0;106m' #bLightCyan
+cNoColor='\033[0;0m' #cNoColor
 arrow="  -> "
 
 ## update check https://www.christianengvall.se/check-for-changes-on-remote-origin-git-repository/
+echo "Checking for updates..."
 git fetch
  HEADHASH=$(git rev-parse HEAD)
  UPSTREAMHASH=$(git rev-parse main@{upstream})
 
  if [ "$HEADHASH" != "$UPSTREAMHASH" ]
  then
-   echo -e ${cLightBlue}Updates available, do you want to update? \[Y/N\]${NOCOLOR}
+   echo -e ${NOTIFICATION}Updates available, do you want to update? \[Y/N\]${cNoColor}
    read u
     if [ "$u" == "Y" ] || [ "$u" == "y" ]
       then
         echo "Updating..."
         git pull origin main
+        echo -e ${WHITE}Since last update...${cNoColor}
+        git log HEAD..origin/main --oneline
     fi
  else
-   echo -e ${FINISHED}Current branch is up to date with origin/main.${NOCOLOR}
+   echo -e ${WHITE}Up to date!${cNoColor}
  fi
 
 if test -f "${installedDir}/.config"; then
   source "${installedDir}/.config"
   else
-  echo -e "${cYellow}It looks like a config file is not setup, let's create one...${cNoColor}"
+  echo -e "${WARN}It looks like a config file is not setup, let's create one...${cNoColor}"
   sh "${installedDir}/config.sh"
   source "${installedDir}/.config"
 fi
 
 
 
-echo -e "${cMagenta}
+echo -e "${THEME}
 ===================================================
  __   __   __      __   __   ___      ___  __   __  
 /  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
@@ -62,7 +65,7 @@ echo -e "${cMagenta}
 ${cNoColor}"                                                    
 
 ## Start script
-echo "DevHub (leave blank for default $devHub)"
+echo -e "${QUESTION}DevHub (leave blank for default $devHub)${cNoColor}"
 read o
 if [ ! -z "$o" ]
   then
@@ -73,13 +76,18 @@ echo "This script will create a new scratch org off of $devHub. Checking pre-con
 
 if ! command -v sf &> /dev/null
 then
-    echo -e "${cRed}Salesforce CLI could not be found. You must install this first. Exiting...${cNoColor}"
+    echo -e "${ERROR}
+    Salesforce CLI could not be found. You must install this first.${cNoColor}
+    
+    npm i -g @salesforce/cli
+
+    Exiting..."
     exit 1
 fi
 
 if ! command -v gh &> /dev/null
   then
-    echo "${cRed}GitHub CLI could not be found, GitHub steps will be skipped.${cNoColor}"
+    echo -e "${WARN}GitHub CLI could not be found, GitHub steps will be skipped.${cNoColor}"
     exit 1
   else
     github=true
@@ -88,26 +96,26 @@ fi
 # check if code is a valid command in the terminal, if not, direct user to help resources
 if ! command -v code &> /dev/null
 then
-  echo "${cRed}>> VSCode `code` terminal command not found, you will have to launch your editor manually.${cNoColor}"
-  echo ">> To add `code` as a terminal command, open VSCode, press CMD+Shift+P, select Install 'code' command in PATH"
-  echo ">> If that does not work, see https://github.com/microsoft/vscode/issues/154163"
+  echo -e "${WARN}>> VSCode `code` terminal command not found, you will have to launch your editor manually.${cNoColor}"
+  echo -e ">> To add `code` as a terminal command, open VSCode, press CMD+Shift+P, select Install 'code' command in PATH${cNoColor}"
+  echo -e ">> If that does not work, see https://github.com/microsoft/vscode/issues/154163${cNoColor}"
 fi
 
 # read in name of project
 echo ""
-echo -e "${cCyan}What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc.${cNoColor}"
+echo -e "${QUESTION}What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc.${cNoColor}"
 read alias
 datedAlias+=$alias
 
 # user can override the scratch definition if desired
 echo ""
-echo -e "${cCyan}Scratch Definition (Enter 0 for default "$scratchDef")${cNoColor}"
+echo -e "${QUESTION}Scratch Definition (Enter 0 for default "$scratchDef")${cNoColor}"
   select file in "${installedDir}/..scratchDefs/"*.json; do
     if [ $REPLY == "0" ]; then
       echo Default chosen
       break;
     elif [[ -z $file ]]; then
-      echo -e "${cYellow}Invalid selection, try again${cNoColor}" >&2
+      echo -e "${WARN}Invalid selection, try again${cNoColor}" >&2
     else
       scratchDef=$file
       break;
@@ -117,7 +125,7 @@ echo Scratch definition set: $scratchDef
 
 # default parent folder is set but can be overridden
 echo ""
-echo -e "${cCyan}What folder should this go in? (Leave blank for default $folder)${cNoColor}"
+echo -e "${QUESTION}What folder should this go in? (Leave blank for default $folder)${cNoColor}"
 read f
 if [ ! -z "$f" ]
   then
@@ -137,7 +145,7 @@ echo "Setting target-org and generating project"
 sf project generate -t standard -n $datedAlias -d $folder
 
 # write the readme
-echo -e "${cCyan}Describe this goals for this project${cNoColor}"
+echo -e "${QUESTION}Describe this goals for this project${cNoColor}"
 read goals
 echo "# ${alias}" > $folder/$datedAlias/README.md
 echo "" >> $folder/$datedAlias/README.md
