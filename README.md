@@ -19,8 +19,11 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 
 ## Backlog
 
-- [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates 
-- Include a readme file in each directory containing more details about the scratch org, why it was created, etc
 - A cleanup script to clear out old `node_modules` folders
 - Org picker based on authenticated dev hub orgs
 - Directory picker based on folders available from run location
+
+## Delivered Features
+
+✔️ [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates 
+✔️ Include a readme file in each directory containing more details about the scratch org, why it was created, etc
