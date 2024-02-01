@@ -5,6 +5,8 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Setup
 
 - Clone into folder where you manage your development projects. Mine is called `~/Develop`
+- Make `create.sh` and `config.sh` executable
+  - `chmod 700 create.sh config.sh`
 - Add an alias, `oc` to your `.zshrc` or `.bashrc` file that points to your installation location.
   - `echo '\nalias oc="~/Develop/utilities/create.sh"' >> ~/.zshrc` 
 - Reload your `.zshrc` in the terminal: `source ~/.zshrc`
@@ -20,6 +22,7 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Backlog
 
 - A cleanup script to clear out old `node_modules` folders
+- If a config value is missing, prompt for it
 - Org picker based on authenticated dev hub orgs
 - Directory picker based on folders available from run location
 
