@@ -169,7 +169,7 @@ module.exports = {
 
 echo "Creating GitHub Action Workflow Rules"
 mkdir -p .github/workflows
-cp -a "$currentWorkingDirectory/utilities/fileTemplates/workflows/." .github/workflows/
+cp -a "${installedDir}/utilities/fileTemplates/workflows/." .github/workflows/
 
 if $github
 then
