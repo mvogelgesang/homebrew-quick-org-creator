@@ -5,10 +5,10 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Setup
 
 - Clone into folder where you manage your development projects. Mine is called `~/Develop`
-- Make `create.sh` and `config.sh` executable
-  - `chmod 700 create.sh config.sh`
+- Make files within `/src` executable
+  - `chmod +x ~/Develop/quick-org-creator/src/*`
 - Add an alias, `oc` to your `.zshrc` or `.bashrc` file that points to your installation location.
-  - `echo '\nalias oc="~/Develop/utilities/create.sh"' >> ~/.zshrc` 
+  - `echo '\nalias oc="~/Develop/quick-org-creator/src/run.sh"' >> ~/.zshrc` 
 - Reload your `.zshrc` in the terminal: `source ~/.zshrc`
 - Run from anywhere: `oc`
 - Running for the first time will create a config file to hold defaults for devhub org, parent folder, and scratch org definitions.
