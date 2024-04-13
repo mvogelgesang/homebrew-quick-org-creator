@@ -1,24 +1,23 @@
 #!/bin/bash
 
-QUESTION='\033[0;96m' #cLightCyan
-cNoColor='\033[0;0m'
+
 devhub=''
 folderPath=''
 scratchDef=''
 
 
   echo ""
-  echo "${QUESTION}What alias should be used as your default dev hub org${cNoColor}"
+  echo "${oc_COLOR_QUESTION}What alias should be used as your default dev hub org${oc_COLOR_NOCOLOR}"
   read alias
   devhub=$alias
 
   echo ""
-  echo "${QUESTION}What folder should projects be created in? (Enter full path ~/myfolder/path${cNoColor}"
+  echo "${oc_COLOR_QUESTION}What folder should projects be created in? (Enter full path ~/myfolder/path${oc_COLOR_NOCOLOR}"
   read folderPath
   folder=$folderPath
 
   echo ""
-  echo "${QUESTION}Would you like to set a default scratch org definition file?${cNoColor}"
+  echo "${oc_COLOR_QUESTION}Would you like to set a default scratch org definition file?${oc_COLOR_NOCOLOR}"
   select file in ..scratchDefs/*.json; do
     if [[ $REPLY == "0" ]]; then
         echo 'Exiting!' >&2
