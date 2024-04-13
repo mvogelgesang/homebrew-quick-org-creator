@@ -1,7 +1,7 @@
 {
   "orgName": "my company",
   "edition": "Partner Developer",
-  "features": ["Communities", "EnableSetPasswordInApi", "MaxApexCodeSize:10", "EinsteinGPTForDevelopers"],
+  "features": ["Communities", "Sites", "EnableSetPasswordInApi", "MaxApexCodeSize:10", "EinsteinGPTForDevelopers"],
   "settings": {
     "communitiesSettings": {
       "enableNetworksEnabled": true
