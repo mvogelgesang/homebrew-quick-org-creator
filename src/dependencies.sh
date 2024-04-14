@@ -5,7 +5,7 @@ echo "Checking dependencies..."
 
 if ! command -v sf &> /dev/null
 then
-    echo "${oc_COLOR_ERROR}
+    echo -e "${oc_COLOR_ERROR}
     Salesforce CLI could not be found. You must install this first.${oc_COLOR_NOCOLOR}
     
     npm i -g @salesforce/cli
@@ -16,21 +16,21 @@ fi
 
 if ! command -v gh &> /dev/null
   then
-    echo "${oc_COLOR_WARN}GitHub CLI could not be found, GitHub steps will be skipped.${oc_COLOR_NOCOLOR}"
+    echo -e "${oc_COLOR_WARN}GitHub CLI could not be found, GitHub steps will be skipped.${oc_COLOR_NOCOLOR}"
     missingDependency=true
   else
-    oc_github=true
+    export oc_github=true
 fi
 
 if ! command -v jq &> /dev/null
   then
-    echo "${oc_COLOR_WARN}jq could not be found. Install with homebrew.${oc_COLOR_NOCOLOR}\n\n  brew install jq\n\n"
+    echo -e "${oc_COLOR_WARN}jq could not be found. Install with homebrew.${oc_COLOR_NOCOLOR}\n\n  brew install jq\n\n"
     missingDependency=true
 fi
 
 if [ "$missingDependency" = true ]
   then
-    echo "${oc_COLOR_ERROR}One or more dependencies could not be found. Please ensure you have installed all necessary dependencies.${oc_COLOR_NOCOLOR}\n\nExiting..."
+    echo -e "${oc_COLOR_ERROR}One or more dependencies could not be found. Please ensure you have installed all necessary dependencies.${oc_COLOR_NOCOLOR}\n\nExiting..."
     exit 1
 fi
 

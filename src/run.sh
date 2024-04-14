@@ -35,7 +35,7 @@ echo -e "${oc_COLOR_THEME}
 =================================================== 
 ${oc_COLOR_NOCOLOR}"                                                    
 
-sh "${oc_installedDir}/dependencies.sh"
+source "${oc_installedDir}/dependencies.sh"
 
 if [ $? -eq 1 ]
 then
@@ -45,11 +45,10 @@ fi
 if test -f "${oc_configFilePath}"; then
   source "${oc_configFilePath}"
   else
-  echo "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
-  sh "${oc_installedDir}/config.sh"
+  echo -e "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
+  source "${oc_installedDir}/config.sh"
   source "${oc_configFilePath}"
 fi
-
 
 
 arg=$1
@@ -58,17 +57,17 @@ arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
 case $arg in
   "namespace")
     echo "Updating namespace list"
-    sh "${oc_installedDir}/namespace.sh"
+    source "${oc_installedDir}/namespace.sh"
     ;;
   "config")
     echo "Argument is config"
-    sh "${oc_installedDir}/config.sh"
+    source "${oc_installedDir}/config.sh"
     ;;
   "devhub")
     echo "Updating DevHub list"
     ;;
   *)
-    sh "${oc_installedDir}/create.sh"
+    source "${oc_installedDir}/create.sh"
     ;;
 esac
 
