@@ -33,7 +33,7 @@ done
   echo "scratchDef=$scratchDef
 devHub=$devhub
 folder=$folder
-  " > .config
+  " > ${oc_installedDir}/../.config
 
 
 echo "Config file has been written to .config, you can update your defaults at anytime."

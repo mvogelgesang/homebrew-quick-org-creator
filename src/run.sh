@@ -27,6 +27,49 @@ export oc_COLOR_NOTIFICATION='\033[0;44m' #bBlue
 export oc_COLOR_NOCOLOR='\033[0;0m' #cNoColor
 export oc_arrow="  -> "
 
+echo -e "${oc_COLOR_THEME}
+===================================================
+ __   __   __      __   __   ___      ___  __   __  
+/  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
+\__/ |  \ \__>    \__, |  \ |___ /~~\  |  \__/ |  \\
+=================================================== 
+${oc_COLOR_NOCOLOR}"                                                    
+
+sh "${oc_installedDir}/dependencies.sh"
+
+if [ $? -eq 1 ]
+then
+  exit 1
+fi
+
+if test -f "${oc_configFilePath}"; then
+  source "${oc_configFilePath}"
+  else
+  echo "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
+  sh "${oc_installedDir}/config.sh"
+  source "${oc_configFilePath}"
+fi
 
 
-sh "${oc_installedDir}/create.sh"
+
+arg=$1
+arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
+
+case $arg in
+  "namespace")
+    echo "Updating namespace list"
+    sh "${oc_installedDir}/namespace.sh"
+    ;;
+  "config")
+    echo "Argument is config"
+    sh "${oc_installedDir}/config.sh"
+    ;;
+  "devhub")
+    echo "Updating DevHub list"
+    ;;
+  *)
+    sh "${oc_installedDir}/create.sh"
+    ;;
+esac
+
+

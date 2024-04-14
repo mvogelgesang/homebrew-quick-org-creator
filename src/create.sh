@@ -23,23 +23,6 @@ git fetch
    echo "${oc_COLOR_WHITE}Up to date!${oc_COLOR_NOCOLOR}"
  fi
 
-if test -f "${oc_configFilePath}"; then
-  source "${oc_configFilePath}"
-  else
-  echo "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
-  sh "${oc_installedDir}/config.sh"
-  source "${oc_configFilePath}"
-fi
-
-
-echo "${oc_COLOR_THEME}
-===================================================
- __   __   __      __   __   ___      ___  __   __  
-/  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
-\__/ |  \ \__>    \__, |  \ |___ /~~\  |  \__/ |  \\
-=================================================== 
-${oc_COLOR_NOCOLOR}"                                                    
-
 ## Start script
 echo "${oc_COLOR_QUESTION}DevHub (leave blank for default $devHub)${oc_COLOR_NOCOLOR}"
 read o
@@ -50,32 +33,7 @@ fi
 
 echo "This script will create a new scratch org off of $devHub. Checking pre-conditions..."
 
-if ! command -v sf &> /dev/null
-then
-    echo "${oc_COLOR_ERROR}
-    Salesforce CLI could not be found. You must install this first.${oc_COLOR_NOCOLOR}
-    
-    npm i -g @salesforce/cli
 
-    Exiting..."
-    exit 1
-fi
-
-if ! command -v gh &> /dev/null
-  then
-    echo "${oc_COLOR_WARN}GitHub CLI could not be found, GitHub steps will be skipped.${oc_COLOR_NOCOLOR}"
-    exit 1
-  else
-    github=true
-fi
-
-# check if code is a valid command in the terminal, if not, direct user to help resources
-if ! command -v code &> /dev/null
-then
-  echo -e "${oc_COLOR_WARN}>> VSCode `code` terminal command not found, you will have to launch your editor manually.${oc_COLOR_NOCOLOR}"
-  echo -e ">> To add `code` as a terminal command, open VSCode, press CMD+Shift+P, select Install 'code' command in PATH${oc_COLOR_NOCOLOR}"
-  echo -e ">> If that does not work, see https://github.com/microsoft/vscode/issues/154163${oc_COLOR_NOCOLOR}"
-fi
 
 # read in name of project
 echo ""
@@ -147,7 +105,7 @@ echo "Creating GitHub Action Workflow Rules"
 mkdir -p .github/workflows
 cp -a "${oc_installedDir}/utilities/fileTemplates/workflows/." .github/workflows/
 
-if $github
+if $oc_github
 then
   echo "Creating a git repo locally and on GitHub"
   git init 
