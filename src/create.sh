@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 ## update check https://www.christianengvall.se/check-for-changes-on-remote-origin-git-repository/
 echo "Checking for updates..."
 git fetch
@@ -24,14 +22,14 @@ git fetch
  fi
 
 ## Start script
-echo "${oc_COLOR_QUESTION}DevHub (leave blank for default $devHub)${oc_COLOR_NOCOLOR}"
+echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default $oc_devHub)${oc_COLOR_NOCOLOR}"
 read o
 if [ ! -z "$o" ]
   then
-    devHub=$o
+    oc_devHub=$o
 fi
 
-echo "This script will create a new scratch org off of $devHub. Checking pre-conditions..."
+echo "This script will create a new scratch org off of $oc_devHub."
 
 
 
@@ -39,27 +37,27 @@ echo "This script will create a new scratch org off of $devHub. Checking pre-con
 echo ""
 echo -e "${oc_COLOR_QUESTION}What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc.${oc_COLOR_NOCOLOR}"
 read oc_alias
-datedAlias+=$oc_alias
+oc_datedAlias+=$oc_alias
 
 # user can override the scratch definition if desired
 echo ""
-echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$scratchDef")${oc_COLOR_NOCOLOR}"
-  select file in "${oc_installedDir}/..scratchDefs/"*.json; do
+echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$oc_scratchDef")${oc_COLOR_NOCOLOR}"
+  select file in "${oc_installedDir}/../..scratchDefs/"*.json; do
     if [ $REPLY == "0" ]; then
       echo Default chosen
       break;
     elif [[ -z $file ]]; then
       echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
     else
-      scratchDef=$file
+      oc_scratchDef=$file
       break;
     fi
 done
-echo Scratch definition set: $scratchDef
+echo Scratch definition set: $oc_scratchDef
 
 # default parent folder is set but can be overridden
 echo ""
-echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for default $folder)${oc_COLOR_NOCOLOR}"
+echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for default $oc_folder)${oc_COLOR_NOCOLOR}"
 read f
 if [ ! -z "$f" ]
   then
@@ -72,22 +70,54 @@ fi
 
 # create the scratch org and project folder. 
 # Once done, open folder in code and install dependencies
-sf org create scratch -f $scratchDef -a $oc_alias -v $devHub -w 10 -y 21
-sf org resume scratch --use-most-recent
+sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
+
 echo "Scratch org creation done"
+
+echo ""
+echo -e "${oc_COLOR_QUESTION}Should this project have an associated namespace?${oc_COLOR_NOCOLOR}"
+
+  if [ -z "${oc_namespaceArray[*]}" ]
+  then
+    read -p "Enter namespace (leave blank for none): " namespace
+  else
+    echo "Select a namespace from the list (enter 0 to not set a namespace):"
+    select ns in "${oc_namespaceArray[@]}"; do
+      if [ $REPLY == "0" ]; then
+        namespace=""
+        break;
+      elif [[ -n $ns ]]; then
+        namespace=$ns
+        break;
+      else
+        echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
+      fi
+    done
+  fi
+
+  if [ -z "$namespace" ]
+  then
+    echo "No namespace has been set for this project."
+    nsFlag=""
+  else
+    echo "The namespace for this project is set to $namespace."
+    nsFlag="-s $namespace"
+  fi
+
+echo ""
 echo "Setting target-org and generating project"
-sf project generate -t standard -n $datedAlias -d $folder
+sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
 
 # write the readme
 echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
 read goals
-echo "# ${oc_alias}" > $folder/$datedAlias/README.md
-echo "" >> $folder/$datedAlias/README.md
-echo $goals >> $folder/$datedAlias/README.md
+echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
+echo "" >> $oc_folder/$oc_datedAlias/README.md
+echo $goals >> $oc_folder/$oc_datedAlias/README.md
 
 # open code editor
-code $folder/$datedAlias -g $folder/$datedAlias/README.md:2
-cd $folder/$datedAlias
+code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
+cd $oc_folder/$oc_datedAlias
 sf config set target-org=$oc_alias
 echo "Resetting the password"
 sf org generate password --complexity 3
@@ -103,17 +133,16 @@ module.exports = {
 
 echo "Creating GitHub Action Workflow Rules"
 mkdir -p .github/workflows
-cp -a "${oc_installedDir}/utilities/fileTemplates/workflows/." .github/workflows/
+cp -a "${oc_installedDir}/../fileTemplates/workflows/." .github/workflows/
 
 if $oc_github
 then
   echo "Creating a git repo locally and on GitHub"
   git init 
-  gh repo create $datedAlias --private  -s .  --disable-wiki --disable-issues
+  gh repo create $oc_datedAlias --private  -s .  --disable-wiki --disable-issues
 else
   echo "Github CLI not setup, skipping Git-related steps"
 fi
 
 echo "Opening the new org"
 sf org open -o $oc_alias
-echo "You will need to authenticate your new org"
