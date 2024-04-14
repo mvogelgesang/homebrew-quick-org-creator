@@ -65,6 +65,7 @@ case $arg in
     ;;
   "devhub")
     echo "Updating DevHub list"
+    source "${oc_installedDir}/devHub.sh"
     ;;
   *)
     source "${oc_installedDir}/create.sh"
