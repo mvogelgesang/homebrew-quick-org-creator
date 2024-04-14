@@ -18,16 +18,36 @@ git fetch
         git log HEAD..origin/main --oneline
     fi
  else
-   echo "${oc_COLOR_WHITE}Up to date!${oc_COLOR_NOCOLOR}"
+   echo -e "${oc_COLOR_WHITE}Up to date!${oc_COLOR_NOCOLOR}"
  fi
 
 ## Start script
-echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default $oc_devHub)${oc_COLOR_NOCOLOR}"
-read o
-if [ ! -z "$o" ]
-  then
-    oc_devHub=$o
+# echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default $oc_devHub)${oc_COLOR_NOCOLOR}"
+# read o
+# if [ ! -z "$o" ]
+#   then
+#     oc_devHub=$o
+# fi
+
+if [ -z "${oc_devHubArray[*]}" ]
+then
+  echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default "$oc_devHub")${oc_COLOR_NOCOLOR}"
+  read alias
+else
+  echo -e "${oc_COLOR_QUESTION}DevHub (enter 0 for default "$oc_devHub")${oc_COLOR_NOCOLOR}"
+  select dh in "${oc_devHubArray[@]}"; do
+    if [ $REPLY == "0" ]; then
+      alias=$oc_devHub
+      break;
+    elif [[ -n $dh ]]; then
+      alias=$dh
+      break;
+    else
+      echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
+    fi
+  done
 fi
+oc_devHub=$alias
 
 echo "This script will create a new scratch org off of $oc_devHub."
 
