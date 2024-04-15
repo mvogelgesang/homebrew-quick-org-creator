@@ -50,6 +50,10 @@ if test -f "${oc_configFilePath}"; then
   source "${oc_configFilePath}"
 fi
 
+# Check for updates
+if brew outdated | grep -q '^quick-org-creator '; then
+  echo "An update for mvogelgesang/quick-org-creator is available. You can update it with 'brew upgrade mvogelgesang/quick-org-creator'."
+fi
 
 arg=$1
 arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
