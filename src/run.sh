@@ -4,7 +4,7 @@
 export oc_alias=""
 export oc_datedAlias=$(date '+%Y%m%d')_
 export oc_update="N"
-export oc_installedDir="`dirname $0`"
+export oc_installedDir="$(brew --prefix quick-org-creator)/libexec"
 export oc_configFilePath="${oc_installedDir}/../.config"
 export oc_github=false
 export oc_currentWorkingDirectory=$(pwd)
