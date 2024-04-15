@@ -12,7 +12,7 @@ class QuickOrgCreator < Formula
   depends_on "jq"
 
   def install
-    libexec.install Dir[*]
+    libexec.install Dir["*"]
     bin.write_exec_script (libexec/"src/run.sh") => "oc"
   end
 
