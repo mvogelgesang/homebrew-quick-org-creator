@@ -1,26 +1,5 @@
 #!/bin/bash
 
-## update check https://www.christianengvall.se/check-for-changes-on-remote-origin-git-repository/
-echo "Checking for updates..."
-git fetch
- HEADHASH=$(git rev-parse HEAD)
- UPSTREAMHASH=$(git rev-parse main@{upstream})
-
- if [ "$HEADHASH" != "$UPSTREAMHASH" ]
- then
-   echo -e "${oc_COLOR_NOTIFICATION}Updates available, do you want to update? \[Y/N\]${oc_COLOR_NOCOLOR}"
-   read u
-    if [ "$u" == "Y" ] || [ "$u" == "y" ]
-      then
-        echo "Updating..."
-        git pull origin main
-        echo -e ${oc_COLOR_WHITE}Since last update...${oc_COLOR_NOCOLOR}
-        git log HEAD..origin/main --oneline
-    fi
- else
-   echo -e "${oc_COLOR_WHITE}Up to date!${oc_COLOR_NOCOLOR}"
- fi
-
 ## Start script
 # echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default $oc_devHub)${oc_COLOR_NOCOLOR}"
 # read o
