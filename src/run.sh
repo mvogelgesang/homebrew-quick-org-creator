@@ -5,7 +5,8 @@ export oc_alias=""
 export oc_datedAlias=$(date '+%Y%m%d')_
 export oc_update="N"
 export oc_installedDir="$(brew --prefix quick-org-creator)/libexec"
-export oc_configFilePath="${oc_installedDir}/../.config"
+export oc_configFilePath="$HOME/.quick-org-creator/"
+export oc_configFileName="${oc_configFilePath}.config"
 export oc_github=false
 export oc_currentWorkingDirectory=$(pwd)
 
@@ -42,12 +43,12 @@ then
   exit 1
 fi
 
-if test -f "${oc_configFilePath}"; then
-  source "${oc_configFilePath}"
+if test -f "${oc_configFileName}"; then
+  source "${oc_configFileName}"
   else
-  echo -e "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
+  echo -e "${oc_COLOR_WARN}IIt looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
   source "${oc_installedDir}/config.sh"
-  source "${oc_configFilePath}"
+  source "${oc_configFileName}"
 fi
 
 # Check for updates

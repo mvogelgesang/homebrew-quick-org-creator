@@ -5,8 +5,11 @@ devhub=''
 folderPath=''
 scratchDef=''
 
+mkdir -p $oc_configFilePath
+touch $oc_configFileName
+
 source ${oc_installedDir}/devHub.sh
-source ${oc_installedDir}/../.config
+source $oc_configFileName
 
 echo ""
 
@@ -28,14 +31,14 @@ else
     fi
   done
 fi
-update_or_add_var "oc_devHub" "${oc_installedDir}/../.config" $alias
+update_or_add_var "oc_devHub" "${oc_configFileName}" $alias
 
 
 echo ""
 echo -e "${oc_COLOR_QUESTION}What folder should projects be created in? (Enter full path ~/myfolder/path${oc_COLOR_NOCOLOR}"
 read folderPath
 folder=$folderPath
-update_or_add_var "oc_folder" "${oc_installedDir}/../.config" $folder
+update_or_add_var "oc_folder" "${oc_configFileName}" $folder
 
 
 echo ""
@@ -51,14 +54,8 @@ select file in ..scratchDefs/*.json; do
       break
   fi
 done
-update_or_add_var "oc_scratchDef" "${oc_installedDir}/../.config" $scratchDef
+update_or_add_var "oc_scratchDef" "${oc_configFileName}" $scratchDef
 
 
-  
-export oc_devHub=$devhub
-export oc_folder=$folder
-  " >> ${oc_installedDir}/../.config
-
-
-echo "Config file has been written to .config, you can update your defaults at anytime by running "oc config"."
+echo "Config file has been written to ${oc_configFileName}, you can update your defaults at anytime by running "oc config"."
 echo "Continuing..."
