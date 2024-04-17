@@ -8,7 +8,7 @@
   ],
   "settings": {
     "customerDataPlatformSettings": {
-      "enableCustomerDataPlatform": true
+      "enableCustomerDataPlatform":true
     },
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true,
@@ -24,7 +24,6 @@
         "expiration": "Never",
         "historyRestriction": "0"
       },
-
       "sessionSettings": {
         "sessionTimeout": "TwelveHours"
       }

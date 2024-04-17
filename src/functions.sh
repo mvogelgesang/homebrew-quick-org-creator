@@ -16,8 +16,8 @@ update_or_add_var() {
   fi
 
   if grep -q "${var_name}=" "$config_file"; then
-    # If it exists, replace it
-    sed -i "" "s/$var_name=.*/$var_name=$var_value_string/" "$config_file"
+    # If it exists, replace it (using # as a sed delimiter rather than the traditional /)
+    sed -i "" "s#$var_name=.*#$var_name=$var_value_string#" "$config_file"
   else
     # If it doesn't exist, add it
     echo -e "\nexport $var_name=$var_value_string" >> "$config_file"

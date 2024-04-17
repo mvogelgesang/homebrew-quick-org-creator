@@ -41,7 +41,7 @@ oc_datedAlias+=$oc_alias
 # user can override the scratch definition if desired
 echo ""
 echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$oc_scratchDef")${oc_COLOR_NOCOLOR}"
-  select file in "${oc_installedDir}/../..scratchDefs/"*.json; do
+  select file in "${oc_installedDir}/..scratchDefs/"*.json; do
     if [ $REPLY == "0" ]; then
       echo Default chosen
       break;
@@ -74,7 +74,7 @@ sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
 echo "Scratch org creation done"
 
 echo ""
-echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new scratch org. To store a list of namespaces, run `oc namespace`${oc_COLOR_NOCOLOR}"
+echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new scratch org. To store a list of namespaces, run "oc namespace"${oc_COLOR_NOCOLOR}"
 
   if [ -z "${oc_namespaceArray[*]}" ]
   then
