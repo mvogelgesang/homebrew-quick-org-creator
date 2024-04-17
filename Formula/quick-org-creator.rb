@@ -1,11 +1,11 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook
-#                https://rubydoc.brew.sh/Formula
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
 class QuickOrgCreator < Formula
-  desc "A script to ease the process of creating Salesforce scratch orgs"
+  desc "Script to ease the process of creating Salesforce scratch orgs"
   homepage "https://github.com/mvogelgesang/homebrew-quick-org-creator"
-  url "https://github.com/mvogelgesang/homebrew-quick-org-creator/archive/refs/tags/v0.2.1.tar.gz"
-  sha256 "a09c574f9253d4c6f4e3487d8dcb375180aa6a685042fb5570b920aad00b0513"
+  # LOCAL url "file://localhost/Users/mvogelgesang/Develop/quick-org-creator/tmp9.tar.gz"
+  # LOCAL sha256 "becfae0bc2b8b9876928948a5b730a145459984ba399ccda1c3a32b33f3a57f4"
+  # LOCAL version "0.2.2"
+  url "https://github.com/mvogelgesang/homebrew-quick-org-creator/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "5085c5f60f0e0e0a446b03abd5c72178d9312e366adf8aaf539a8229a3f76bad"
   license "MIT"
 
   depends_on "gh"
@@ -13,6 +13,8 @@ class QuickOrgCreator < Formula
 
   def install
     libexec.install Dir["src/*"]
+    libexec.install Dir["fileTemplates/"]
+    libexec.install Dir["..scratchDefs/"]
     bin.install_symlink libexec/"run.sh" => "oc"
   end
 
