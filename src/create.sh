@@ -1,13 +1,6 @@
 #!/bin/bash
 
-## Start script
-# echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default $oc_devHub)${oc_COLOR_NOCOLOR}"
-# read o
-# if [ ! -z "$o" ]
-#   then
-#     oc_devHub=$o
-# fi
-
+# DEV HUB
 if [ -z "${oc_devHubArray[*]}" ]
 then
   echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default "$oc_devHub")${oc_COLOR_NOCOLOR}"
@@ -30,15 +23,13 @@ oc_devHub=$alias
 
 echo "This script will create a new scratch org off of $oc_devHub."
 
-
-
-# read in name of project
+# PROJECT / ORG ALIAS
 echo ""
 echo -e "${oc_COLOR_QUESTION}What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc.${oc_COLOR_NOCOLOR}"
 read oc_alias
 oc_datedAlias+=$oc_alias
 
-# user can override the scratch definition if desired
+# SCRATCH DEFINITION
 echo ""
 echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$oc_scratchDef")${oc_COLOR_NOCOLOR}"
   select file in "${oc_installedDir}/..scratchDefs/"*.json; do
@@ -54,7 +45,7 @@ echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$oc_scratc
 done
 echo Scratch definition set: $oc_scratchDef
 
-# default parent folder is set but can be overridden
+# PROJECT DIRECTORY 
 echo ""
 echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for default $oc_folder)${oc_COLOR_NOCOLOR}"
 read f
@@ -65,16 +56,12 @@ if [ ! -z "$f" ]
     oc_folder=$f
 fi
 
-# echo "Devhub: $devHub"
-# echo "scratchDef: $scratchDef"
-# echo "alias: $oc_alias"
-
-# create the scratch org and project folder. 
-# Once done, open folder in code and install dependencies
+# CREATE SCRATCH
 sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
 
 echo "Scratch org creation done"
 
+# NAMESPACE
 echo ""
 echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new project. To store a list of namespaces, run "oc namespace"${oc_COLOR_NOCOLOR}"
 
@@ -105,18 +92,19 @@ echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new project. To sto
     nsFlag="-s $namespace"
   fi
 
+# CREATE PROJECT
 echo ""
 echo "Setting target-org and generating project"
 sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
 
-# write the readme
+# UPDATE README
 echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
 read goals
 echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
 echo "" >> $oc_folder/$oc_datedAlias/README.md
 echo $goals >> $oc_folder/$oc_datedAlias/README.md
 
-# open code editor
+# OPEN VS CODE
 code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
 cd $oc_folder/$oc_datedAlias
 sf config set target-org=$oc_alias
@@ -136,6 +124,7 @@ echo "Creating GitHub Action Workflow Rules"
 mkdir -p .github/workflows
 cp -a "${oc_installedDir}/../fileTemplates/workflows/." .github/workflows/
 
+# GITHUB REPO
 if $oc_github
 then
   echo "Creating a git repo locally and on GitHub"
@@ -145,5 +134,6 @@ else
   echo "Github CLI not setup, skipping Git-related steps"
 fi
 
+# OPEN ORG
 echo "Opening the new org"
 sf org open -o $oc_alias
