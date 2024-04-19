@@ -60,7 +60,9 @@ echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for def
 read f
 if [ ! -z "$f" ]
   then
-    folder=$f
+    # ~ is not automatically expanded, first we do that. If an absolute path is provided, thats ok too
+    f="${f/#\~/$HOME}"
+    oc_folder=$f
 fi
 
 # echo "Devhub: $devHub"
@@ -74,7 +76,7 @@ sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
 echo "Scratch org creation done"
 
 echo ""
-echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new scratch org. To store a list of namespaces, run "oc namespace"${oc_COLOR_NOCOLOR}"
+echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new project. To store a list of namespaces, run "oc namespace"${oc_COLOR_NOCOLOR}"
 
   if [ -z "${oc_namespaceArray[*]}" ]
   then
