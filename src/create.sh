@@ -56,10 +56,6 @@ if [ ! -z "$f" ]
     oc_folder=$f
 fi
 
-# CREATE SCRATCH
-sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
-
-echo "Scratch org creation done"
 
 # NAMESPACE
 echo ""
@@ -94,8 +90,9 @@ echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new project. To sto
 
 # CREATE PROJECT
 echo ""
-echo "Setting target-org and generating project"
+echo "Generating project"
 sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
+cd $oc_folder/$oc_datedAlias
 
 # UPDATE README
 echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
@@ -104,15 +101,24 @@ echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
 echo "" >> $oc_folder/$oc_datedAlias/README.md
 echo $goals >> $oc_folder/$oc_datedAlias/README.md
 
-# OPEN VS CODE
+# CREATE SCRATCH
+sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
+echo "Scratch org creation done"
+
+# OPEN VS CODE & SET TARGET ORG
 code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
-cd $oc_folder/$oc_datedAlias
+echo "Setting default org target"
 sf config set target-org=$oc_alias
+
+# PW RESET
 echo "Resetting the password"
 sf org generate password --complexity 3
-echo "Installing dependencies"
-npm i
 
+# OPEN ORG
+echo "Opening the new org"
+sf org open -o $oc_alias
+
+# PROJECT UPDATE
 echo "Creating pre-commit hook for Code Analyzer"
 echo -e "// lint-staged.config.js
 module.exports = {
@@ -134,6 +140,6 @@ else
   echo "Github CLI not setup, skipping Git-related steps"
 fi
 
-# OPEN ORG
-echo "Opening the new org"
-sf org open -o $oc_alias
+# INSTALL DEPENDENCIES
+echo "Installing dependencies"
+npm i
