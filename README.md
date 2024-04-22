@@ -55,8 +55,7 @@ Assumes all changes to scripts and templates are committed and merged into main.
 - Copy link to tarball
 - Fetch SHA-256 using tarball url
 
-`curl -L {tarballUrl} | shasum -a 256
+`curl -L {tarballUrl} | shasum -a 256`
 
 - Update `./Formula/quick-org-creator.rb` and replace url and sha contents.
 - Commit all changes and push to main
-
