@@ -4,11 +4,12 @@
   "features": [
     "EnableSetPasswordInApi",
     "CustomerDataPlatform",
-    "EinsteinGPTForDevelopers"
+    "EinsteinGPTForDevelopers",
+    "MarketingUser"
   ],
   "settings": {
     "customerDataPlatformSettings": {
-      "enableCustomerDataPlatform":true
+      "enableCustomerDataPlatform": "true"
     },
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true,
