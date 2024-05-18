@@ -27,6 +27,7 @@ export oc_COLOR_NOTIFICATION='\033[0;44m' #bBlue
 #='\033[0;106m' #bLightCyan
 export oc_COLOR_NOCOLOR='\033[0;0m' #cNoColor
 export oc_arrow="  -> "
+version=$(cat ${oc_installedDir}/VERSION)
 
 echo -e "${oc_COLOR_THEME}
 ===================================================
@@ -71,6 +72,9 @@ case $arg in
   "devhub")
     echo "Updating DevHub list"
     source "${oc_installedDir}/devHub.sh"
+    ;;
+  "--version")
+    echo $version
     ;;
   *)
     source "${oc_installedDir}/create.sh"

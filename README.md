@@ -38,8 +38,9 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Local Testing
 
 `brew uninstall quick-org-creator`
-`tar -czvf tmp9.tar.gz src/ Formula ..scratchDefs fileTemplates`
-`shasum -a 256 tmp9.tar.gz`
+`tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
+`shasum -a 256 tmp-quick-org-creator.tar.gz`
+`brew cleanup -s quick-org-creator`
 update url and sha in Formula
 `brew install --build-from-source Formula/quick-org-creator.rb`
 
