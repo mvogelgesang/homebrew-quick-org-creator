@@ -6,7 +6,7 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 
 `brew tap mvogelgesang/quick-org-creator`
 
-`brew install quick-org-creator` 
+`brew install quick-org-creator`
 
 - Run from anywhere in your terminal with `oc`
 - Running for the first time will create a config file to hold defaults for devhub org, parent folder, and scratch org definitions.
@@ -38,10 +38,15 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Local Testing
 
 `brew uninstall quick-org-creator`
+
 `tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
+
 `shasum -a 256 tmp-quick-org-creator.tar.gz`
+
 `brew cleanup -s quick-org-creator`
+
 update url and sha in Formula
+
 `brew install --build-from-source Formula/quick-org-creator.rb`
 
 ## Deploying

@@ -12,6 +12,11 @@ source ${oc_installedDir}/devHub.sh
 source $oc_configFileName
 
 echo ""
+echo -e "${oc_COLOR_THEME}
+------------------------------
+=======CONFIG EDITOR==========
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+${oc_COLOR_NOCOLOR}"       
 
 if [ -z "${oc_devHubArray[*]}" ]
 then

@@ -47,7 +47,7 @@ fi
 if test -f "${oc_configFileName}"; then
   source "${oc_configFileName}"
   else
-  echo -e "${oc_COLOR_WARN}IIt looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
+  echo -e "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
   source "${oc_installedDir}/config.sh"
   source "${oc_configFileName}"
 fi
@@ -66,7 +66,7 @@ case $arg in
     source "${oc_installedDir}/namespace.sh"
     ;;
   "config")
-    echo "Argument is config"
+    echo "Opening config editor"
     source "${oc_installedDir}/config.sh"
     ;;
   "devhub")
