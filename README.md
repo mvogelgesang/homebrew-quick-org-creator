@@ -38,18 +38,28 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 ## Local Testing
 
 `brew uninstall quick-org-creator`
-`tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates`
+
+`tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
+
 `shasum -a 256 tmp-quick-org-creator.tar.gz`
+
+`brew cleanup -s quick-org-creator`
+
 update url and sha in Formula
+
 `brew install --build-from-source Formula/quick-org-creator.rb`
 
 ## Deploying
 
 Assumes all changes to scripts and templates are committed and merged into main.
 
-`git tag -a v{versionNumber} -m {versionNumber}`
+`versionNumber=#.#.#`
 
-`git push origin v{versionNumber}`
+`echo -n $versionNumber>VERSION`
+
+`git tag -a v${versionNumber} -m ${versionNumber}`
+
+`git push origin v${versionNumber}`
 
 - In GitHub, create new release from tag.
 - Copy link to tarball
@@ -59,3 +69,5 @@ Assumes all changes to scripts and templates are committed and merged into main.
 
 - Update `./Formula/quick-org-creator.rb` and replace url and sha contents.
 - Commit all changes and push to main
+
+`unset versionNumber`
