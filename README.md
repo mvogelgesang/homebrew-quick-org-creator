@@ -37,6 +37,7 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 
 ## Local Testing
 
+
 `brew uninstall --force quick-org-creator`
 
 `tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
