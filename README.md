@@ -48,9 +48,13 @@ update url and sha in Formula
 
 Assumes all changes to scripts and templates are committed and merged into main.
 
-`git tag -a v{versionNumber} -m {versionNumber}`
+`versionNumber=#.#.#`
 
-`git push origin v{versionNumber}`
+`echo -n $versionNumber>VERSION`
+
+`git tag -a v${versionNumber} -m ${versionNumber}`
+
+`git push origin v${versionNumber}`
 
 - In GitHub, create new release from tag.
 - Copy link to tarball
@@ -60,3 +64,5 @@ Assumes all changes to scripts and templates are committed and merged into main.
 
 - Update `./Formula/quick-org-creator.rb` and replace url and sha contents.
 - Commit all changes and push to main
+
+`unset versionNumber`
