@@ -37,7 +37,7 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 
 ## Local Testing
 
-`brew uninstall quick-org-creator`
+`brew uninstall --force quick-org-creator`
 
 `tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
 
@@ -48,6 +48,8 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 update url and sha in Formula
 
 `brew install --build-from-source Formula/quick-org-creator.rb`
+
+`oc --version`
 
 ## Deploying
 

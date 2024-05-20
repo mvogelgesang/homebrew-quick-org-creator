@@ -4,8 +4,8 @@ class QuickOrgCreator < Formula
   # LOCAL url "file://localhost/Users/mvogelgesang/Develop/homebrew-quick-org-creator/tmp-quick-org-creator.tar.gz"
   # LOCAL sha256 "0b821e301329f35bfcbec8fc25d88b26ec9fde165c046cbc5dfe619d921d7599"
   version File.read("VERSION").strip
-  url "https://github.com/mvogelgesang/homebrew-quick-org-creator/archive/refs/tags/v0.3.1.tar.gz"
-  sha256 "9c4aca9f857c36143e6dad8d8b1834b2cf7f9c4db3e1acb352adfd4f8ba97967"
+  url "https://github.com/mvogelgesang/homebrew-quick-org-creator/archive/refs/tags/v0.3.2.tar.gz"
+  sha256 "395150b9ceed527db6d4011be11cec9553936074f94985ae4f03f639a8ed4914"
   license "MIT"
 
   depends_on "gh"
