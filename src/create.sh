@@ -98,6 +98,9 @@ echo "Generating project"
 sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
 cd $oc_folder/$oc_datedAlias
 
+# COPY SCRATCH DEF INTO PROJECT
+cp -f $oc_scratchDef $oc_folder/$oc_datedAlias/config/project-scratch-def.json
+
 # UPDATE README
 echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
 read goals
