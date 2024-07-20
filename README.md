@@ -16,6 +16,7 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
   - [Backlog](#backlog)
   - [Delivered Features](#delivered-features)
   - [Local Testing](#local-testing)
+    - [Restoring Production Version Locally](#restoring-production-version-locally)
   - [Deploying](#deploying)
 
 ## Installation
@@ -98,19 +99,13 @@ Prints the current version of Quick Org Creator.
 
 ## Local Testing
 
-`brew uninstall --force quick-org-creator`
+`./build/local.sh` Uninstalls any existing version of `oc`, builds from local directory and installs from locally produced bundle `tmp-quick-org-creator.tar.gz`. Once built, can be run using `oc` alias.
 
-`tar -czvf tmp-quick-org-creator.tar.gz src/ Formula ..scratchDefs fileTemplates VERSION`
+### Restoring Production Version Locally
 
-`shasum -a 256 tmp-quick-org-creator.tar.gz`
+`./build/restoreProd.sh`
 
-`brew cleanup -s quick-org-creator`
-
-update url and sha in Formula
-
-`brew install --build-from-source Formula/quick-org-creator.rb`
-
-`oc --version`
+Removes locally built version of package and installs from tap.
 
 ## Deploying
 
