@@ -33,7 +33,7 @@ if [ "$missingDependency" = true ]
     echo -e "${oc_COLOR_ERROR}One or more dependencies could not be found. Please ensure you have installed all necessary dependencies.${oc_COLOR_NOCOLOR}\n\nExiting..."
     exit 1
   else
-    echo -e ${oc_COLOR_SUCCESS}Done.${oc_COLOR_NOCOLOR}"
+    echo -e "${oc_COLOR_SUCCESS}Done.${oc_COLOR_NOCOLOR}"
     echo ""
 fi
 
