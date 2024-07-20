@@ -1,6 +1,20 @@
 # Quick Org Creator
 
-A slim bash script to manage the repeated creation of scratch orgs for day to day work.
+A homebrew package to manage the repeated creation of scratch orgs for day to day work.
+
+- [Quick Org Creator](#quick-org-creator)
+  - [Installation](#installation)
+  - [Dependencies](#dependencies)
+  - [Running](#running)
+    - [Create a new scratch org](#create-a-new-scratch-org)
+    - [Refresh config and defaults](#refresh-config-and-defaults)
+    - [Refresh list of DevHub orgs](#refresh-list-of-devhub-orgs)
+    - [Refresh namespace list](#refresh-namespace-list)
+  - [Updating](#updating)
+  - [Backlog](#backlog)
+  - [Delivered Features](#delivered-features)
+  - [Local Testing](#local-testing)
+  - [Deploying](#deploying)
 
 ## Installation
 
@@ -8,20 +22,53 @@ A slim bash script to manage the repeated creation of scratch orgs for day to da
 
 `brew install quick-org-creator`
 
-- Run from anywhere in your terminal with `oc`
-- Running for the first time will create a config file to hold defaults for devhub org, parent folder, and scratch org definitions.
+## Dependencies
+
+- [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli)
+- [Git](https://git-scm.com/)
+- [GitHub CLI (Optional)](https://cli.github.com/)
+
+## Running
+
+The first time `oc` is run, it will establish a configuration file that is used to supply the list of DevHub orgs, any namespaces, and set default values.
+
+### Create a new scratch org
+
+`oc`
+
+Creates a new scratch org and prompts user to identify which DevHub to use, folder location, and scratch definition file. Upon completion, the following are produced
+
+- New Salesforce scratch org from desired DevHub with specified org definition
+- New project directory with org set as default target
+- Initialized Git repo and creation of corresponding private GitHub repo (if GitHub CLI is installed)
+
+### Refresh config and defaults
+
+`oc config`
+
+Allows you to set default values for:
+
+- DevHub
+- Project folder location
+- Scratch Definition File
+
+### Refresh list of DevHub orgs
+
+`oc devhub`
+
+Saves a local list of DevHub orgs that have been authenticated via the CLI. If a devhub does not have an alias, it appears as blank in the list.
+
+### Refresh namespace list
+
+`oc namespace`
+
+Refreshes the list of namespaces associated with your default DevHub org.
 
 ## Updating
 
 `brew update`
 
 `brew upgrade quick-org-creator`
-
-## Outputs
-
-- New Salesforce scratch org from desired devHub with specified org definition
-- New project directory with org set as default target
-- Initialized Git repo and creation of private GitHub repo
 
 ## Backlog
 
