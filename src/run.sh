@@ -76,6 +76,14 @@ case $arg in
   "--version")
     echo $version
     ;;
+  "help")
+    echo "Quick Org Creator Commands"
+    echo "config        - Runs configuration update and lets you set default params"
+    echo "devhub        - Refreshes the list of authenticated DevHub orgs"
+    echo "help          - Prints all commands"
+    echo "namespace     - Refreshes the list of namespaces assocated with a given DevHub"
+    echo "--version     - Prints the current version of Quick Org Creator"
+    ;;
   *)
     source "${oc_installedDir}/create.sh"
     ;;
