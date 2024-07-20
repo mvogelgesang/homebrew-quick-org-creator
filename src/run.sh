@@ -78,6 +78,7 @@ case $arg in
     ;;
   "help")
     echo "Quick Org Creator Commands"
+    echo ""
     echo "config        - Runs configuration update and lets you set default params"
     echo "devhub        - Refreshes the list of authenticated DevHub orgs"
     echo "help          - Prints all commands"
