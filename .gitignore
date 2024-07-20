@@ -4,3 +4,4 @@ node_modules/
 .config
 .sfdx/
 tmp-quick-org-creator.tar.gz
+Formula/backup-quick-org-creator.rb
