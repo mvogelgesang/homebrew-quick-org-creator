@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo ""
+echo "Create new scratch org"
+echo ""
+
 # DEV HUB
 if [ -z "${oc_devHubArray[*]}" ]
 then
