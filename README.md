@@ -10,6 +10,8 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
     - [Refresh config and defaults](#refresh-config-and-defaults)
     - [Refresh list of DevHub orgs](#refresh-list-of-devhub-orgs)
     - [Refresh namespace list](#refresh-namespace-list)
+    - [Print commands](#print-commands)
+    - [Check version](#check-version)
   - [Updating](#updating)
   - [Backlog](#backlog)
   - [Delivered Features](#delivered-features)
@@ -63,6 +65,18 @@ Saves a local list of DevHub orgs that have been authenticated via the CLI. If a
 `oc namespace`
 
 Refreshes the list of namespaces associated with your default DevHub org.
+
+### Print commands
+
+`oc help`
+
+Prints all commands and brief descriptions of each.
+
+### Check version
+
+`oc --version`
+
+Prints the current version of Quick Org Creator.
 
 ## Updating
 
