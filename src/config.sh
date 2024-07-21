@@ -68,5 +68,22 @@ done
 
 update_or_add_var "oc_scratchDef" "${oc_configFileName}" $scratchDef
 
+# SCRATCH ORG DURATION DEFAULT
+duration_input_valid=false
+while [ "$duration_input_valid" = false ]; do
+    echo ""
+    echo -e "${oc_COLOR_QUESTION}Set a default number of days before org expires (1-30).${oc_COLOR_NOCOLOR}"
+    read days
+
+    # Check if input is an integer and between 1 and 30
+    if [[ "$days" =~ ^[0-9]+$ ]] && [ "$days" -ge 1 ] && [ "$days" -le 30 ]; then
+        duration_input_valid=true
+        
+        update_or_add_var "oc_duration" "${oc_configFileName}" $days
+    else
+        echo -e "${oc_COLOR_ERROR}Please enter a number between 1 and 30.${oc_COLOR_NOCOLOR}"
+    fi
+done
+
 echo "Config file has been written to ${oc_configFileName}, you can update your defaults at anytime by running "oc config"."
 echo "Continuing..."
