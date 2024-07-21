@@ -92,6 +92,24 @@ echo -e "${oc_COLOR_QUESTION}Let's setup a namespace for the new project. To sto
     nsFlag="-s $namespace"
   fi
 
+# SCRATCH ORG DURATION 
+duration_input_valid=false
+while [ "$duration_input_valid" = false ]; do
+    echo ""
+    echo -e "${oc_COLOR_QUESTION}Set scratch org duration (1-30), leave blank for default ($oc_duration).${oc_COLOR_NOCOLOR}"
+    read days
+
+    if [ -z "$days" ] && [ ! -z "$oc_duration" ]; then
+      duration_input_valid=true
+    # Check if input is an integer and between 1 and 30
+    elif [[ "$days" =~ ^[0-9]+$ ]] && [ "$days" -ge 1 ] && [ "$days" -le 30 ]; then
+        duration_input_valid=true
+        oc_duration=$days
+    else
+        echo -e "${oc_COLOR_ERROR}Please enter a number between 1 and 30.${oc_COLOR_NOCOLOR}"
+    fi
+done
+
 # CREATE PROJECT
 echo ""
 echo "Generating project"
@@ -109,7 +127,7 @@ echo "" >> $oc_folder/$oc_datedAlias/README.md
 echo $goals >> $oc_folder/$oc_datedAlias/README.md
 
 # CREATE SCRATCH
-sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y 21
+sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y $oc_duration
 echo "Scratch org creation done"
 
 # OPEN VS CODE & SET TARGET ORG
