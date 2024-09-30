@@ -13,6 +13,7 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
     - [Print commands](#print-commands)
     - [Check version](#check-version)
   - [Updating](#updating)
+  - [Outputs](#outputs)
   - [Backlog](#backlog)
   - [Delivered Features](#delivered-features)
   - [Local Testing](#local-testing)
@@ -85,6 +86,12 @@ Prints the current version of Quick Org Creator.
 
 `brew upgrade quick-org-creator`
 
+## Outputs
+
+- New Salesforce scratch org from desired devHub with specified org definition
+- New project directory with org set as default target
+- Initialized Git repo and creation of private GitHub repo
+
 ## Backlog
 
 - A cleanup script to clear out old `node_modules` folders
@@ -113,6 +120,18 @@ Assumes all changes to scripts and templates are committed and merged into main.
 
 `versionNumber=#.#.#`
 
+`git pull origin develop`
+
+`git merge main` >> this should say that it is already up to date. If not, merge.
+
+`git checkout main`
+
+`git merge develop`
+
+`git push origin main`
+
+`git tag -a v{versionNumber} -m {versionNumber}`
+
 `echo -n $versionNumber>VERSION`
 
 `git tag -a v${versionNumber} -m ${versionNumber}`
@@ -129,3 +148,13 @@ Assumes all changes to scripts and templates are committed and merged into main.
 - Commit all changes and push to main
 
 `unset versionNumber`
+
+`git push origin main`
+
+`git checkout develop`
+
+`git merge main`
+
+`git push origin develop`
+
+- Now `main` and `develop` will be at the same commit hash.
