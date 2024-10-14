@@ -73,6 +73,10 @@ case $arg in
     echo "Updating DevHub list"
     source "${oc_installedDir}/devHub.sh"
     ;;
+  "remote")
+    echo "Configuring Remotes"
+    source "${oc_installedDir}/remotes.sh"
+    ;;
   "--version")
     echo $version
     ;;
@@ -83,6 +87,7 @@ case $arg in
     echo "devhub        - Refreshes the list of authenticated DevHub orgs"
     echo "help          - Prints all commands"
     echo "namespace     - Refreshes the list of namespaces assocated with a given DevHub"
+    echo "remote        - Configure the list of remotes used."
     echo "--version     - Prints the current version of Quick Org Creator"
     ;;
   *)
