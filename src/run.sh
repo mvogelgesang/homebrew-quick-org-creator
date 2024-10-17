@@ -63,18 +63,22 @@ arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
 case $arg in
   "namespace")
     echo "Updating namespace list"
+    echo ""
     source "${oc_installedDir}/namespace.sh"
     ;;
   "config")
     echo "Opening config editor"
+    echo ""
     source "${oc_installedDir}/config.sh"
     ;;
   "devhub")
     echo "Updating DevHub list"
+    echo ""
     source "${oc_installedDir}/devHub.sh"
     ;;
   "remote")
     echo "Configuring Remotes"
+    echo ""
     source "${oc_installedDir}/remotes.sh"
     ;;
   "--version")
