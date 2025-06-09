@@ -110,6 +110,29 @@ while [ "$duration_input_valid" = false ]; do
     fi
 done
 
+# GITHUB
+if [ -z "${oc_remoteNames[*]}" ]
+then
+  echo -e "${oc_COLOR_QUESTION}Git Remote (leave blank for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
+  read remote
+else
+  echo -e "${oc_COLOR_QUESTION}DevHub (enter 0 for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
+  select r in "${oc_remoteNames[@]}"; do
+    if [ $REPLY == "0" ]; then
+      remote=$oc_defaultRemote
+      break;
+    elif [[ -n $r ]]; then
+      remote=$r
+      break;
+    else
+      echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
+    fi
+  done
+fi
+oc_githubRemote=$remote
+
+echo "This script will create a new scratch org off of $oc_devHub."
+
 # CREATE PROJECT
 echo ""
 echo "Generating project"
@@ -160,6 +183,17 @@ if $oc_github
 then
   echo "Creating a git repo locally and on GitHub"
   git init 
+  custom_host=false
+  # if oc_githubRemote 
+  for i in "${!oc_remoteNames[@]}"; do
+    if [ "${oc_remoteNames[$i]}" == "$oc_githubRemote" ]; then
+      custom_host=true
+      if [ "${oc_remoteUrls[$i]}" != "" ]; then
+        export GH_HOST="${oc_remoteUrls[$i]}"
+      fi
+      break
+    fi
+  done
   gh repo create $oc_datedAlias --private  -s .  --disable-wiki --disable-issues
 else
   echo "Github CLI not setup, skipping Git-related steps"

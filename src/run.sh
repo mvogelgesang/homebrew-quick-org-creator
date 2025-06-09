@@ -63,15 +63,23 @@ arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
 case $arg in
   "namespace")
     echo "Updating namespace list"
+    echo ""
     source "${oc_installedDir}/namespace.sh"
     ;;
   "config")
     echo "Opening config editor"
+    echo ""
     source "${oc_installedDir}/config.sh"
     ;;
   "devhub")
     echo "Updating DevHub list"
+    echo ""
     source "${oc_installedDir}/devHub.sh"
+    ;;
+  "remote")
+    echo "Configuring Remotes"
+    echo ""
+    source "${oc_installedDir}/remotes.sh"
     ;;
   "--version")
     echo $version
@@ -83,6 +91,7 @@ case $arg in
     echo "devhub        - Refreshes the list of authenticated DevHub orgs"
     echo "help          - Prints all commands"
     echo "namespace     - Refreshes the list of namespaces assocated with a given DevHub"
+    echo "remote        - Configure the list of remotes used."
     echo "--version     - Prints the current version of Quick Org Creator"
     ;;
   *)

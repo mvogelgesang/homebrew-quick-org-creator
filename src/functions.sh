@@ -11,8 +11,8 @@ update_or_add_var() {
     # If it's a string, just use it as is
     local var_value_string="${var_value[0]}"
   else
-    # If it's an array, convert it to a string
-    local var_value_string="($(IFS=" "; echo "${var_value[*]}"))"
+    # If it's an array, convert it to a string, make sure any empty strings are converted to double quotes
+    local var_value_string="($(IFS=" "; for val in "${var_value[@]}"; do [[ -z "$val" ]] && echo -n '"" ' || echo -n "$val "; done))"
   fi
 
   if grep -q "${var_name}=" "$config_file"; then
@@ -22,5 +22,4 @@ update_or_add_var() {
     # If it doesn't exist, add it
     echo -e "\nexport $var_name=$var_value_string" >> "$config_file"
   fi
-
 }
