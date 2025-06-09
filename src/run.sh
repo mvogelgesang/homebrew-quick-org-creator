@@ -92,6 +92,7 @@ case $arg in
     echo "help          - Prints all commands"
     echo "namespace     - Refreshes the list of namespaces assocated with a given DevHub"
     echo "remote        - Configure the list of remotes used."
+    echo "-o            - Creates only the scratch org, does not create repo or project directory"
     echo "--version     - Prints the current version of Quick Org Creator"
     ;;
   *)

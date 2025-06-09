@@ -4,6 +4,26 @@ echo ""
 echo "Create new scratch org"
 echo ""
 
+# check if org-only flag "-o" is passed
+ORG_ONLY=false
+while getopts "o" opt; do
+  case ${opt} in
+    o )
+      # If the -o flag is found, user just wants the org
+      ORG_ONLY=true
+      echo "-------------------"
+      echo "-- org-only mode --"
+      echo "-------------------"
+      echo ""
+      ;;
+    \? )
+      # Handle any unknown flags.
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
 # DEV HUB
 if [ -z "${oc_devHubArray[*]}" ]
 then
@@ -49,17 +69,18 @@ echo -e "${oc_COLOR_QUESTION}Scratch Definition (Enter 0 for default "$oc_scratc
 done
 echo Scratch definition set: $oc_scratchDef
 
-# PROJECT DIRECTORY 
-echo ""
-echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for default $oc_folder)${oc_COLOR_NOCOLOR}"
-read f
-if [ ! -z "$f" ]
-  then
-    # ~ is not automatically expanded, first we do that. If an absolute path is provided, thats ok too
-    f="${f/#\~/$HOME}"
-    oc_folder=$f
+if ! $ORG_ONLY; then
+  # PROJECT DIRECTORY 
+  echo ""
+  echo -e "${oc_COLOR_QUESTION}What folder should this go in? (Leave blank for default $oc_folder)${oc_COLOR_NOCOLOR}"
+  read f
+  if [ ! -z "$f" ]
+    then
+      # ~ is not automatically expanded, first we do that. If an absolute path is provided, thats ok too
+      f="${f/#\~/$HOME}"
+      oc_folder=$f
+  fi
 fi
-
 
 # NAMESPACE
 echo ""
@@ -110,51 +131,56 @@ while [ "$duration_input_valid" = false ]; do
     fi
 done
 
-# GITHUB
-if [ -z "${oc_remoteNames[*]}" ]
-then
-  echo -e "${oc_COLOR_QUESTION}Git Remote (leave blank for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
-  read remote
-else
-  echo -e "${oc_COLOR_QUESTION}DevHub (enter 0 for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
-  select r in "${oc_remoteNames[@]}"; do
-    if [ $REPLY == "0" ]; then
-      remote=$oc_defaultRemote
-      break;
-    elif [[ -n $r ]]; then
-      remote=$r
-      break;
-    else
-      echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
-    fi
-  done
+if ! $ORG_ONLY; then
+  # GITHUB
+  if [ -z "${oc_remoteNames[*]}" ]
+  then
+    echo -e "${oc_COLOR_QUESTION}Git Remote (leave blank for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
+    read remote
+  else
+    echo -e "${oc_COLOR_QUESTION}DevHub (enter 0 for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
+    select r in "${oc_remoteNames[@]}"; do
+      if [ $REPLY == "0" ]; then
+        remote=$oc_defaultRemote
+        break;
+      elif [[ -n $r ]]; then
+        remote=$r
+        break;
+      else
+        echo -e "${oc_COLOR_WARN}Invalid selection, try again${oc_COLOR_NOCOLOR}" >&2
+      fi
+    done
+  fi
+  oc_githubRemote=$remote
 fi
-oc_githubRemote=$remote
 
 echo "This script will create a new scratch org off of $oc_devHub."
 
-# CREATE PROJECT
-echo ""
-echo "Generating project"
-sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
-cd $oc_folder/$oc_datedAlias
+if ! $ORG_ONLY; then
+  # CREATE PROJECT
+  echo ""
+  echo "Generating project"
+  sf project generate -t standard -n $oc_datedAlias -d $oc_folder $nsFlag
+  cd $oc_folder/$oc_datedAlias
 
-# COPY SCRATCH DEF INTO PROJECT
-cp -f $oc_scratchDef $oc_folder/$oc_datedAlias/config/project-scratch-def.json
+  # COPY SCRATCH DEF INTO PROJECT
+  cp -f $oc_scratchDef $oc_folder/$oc_datedAlias/config/project-scratch-def.json
 
-# UPDATE README
-echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
-read goals
-echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
-echo "" >> $oc_folder/$oc_datedAlias/README.md
-echo $goals >> $oc_folder/$oc_datedAlias/README.md
-
+  # UPDATE README
+  echo -e "${oc_COLOR_QUESTION}Describe this goals for this project${oc_COLOR_NOCOLOR}"
+  read goals
+  echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
+  echo "" >> $oc_folder/$oc_datedAlias/README.md
+  echo $goals >> $oc_folder/$oc_datedAlias/README.md
+fi 
 # CREATE SCRATCH
 sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y $oc_duration
 echo "Scratch org creation done"
 
 # OPEN VS CODE & SET TARGET ORG
-code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
+if ! $ORG_ONLY; then
+  code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
+fi
 echo "Setting default org target"
 sf config set target-org=$oc_alias
 
@@ -166,39 +192,41 @@ sf org generate password --complexity 3
 echo "Opening the new org"
 sf org open -o $oc_alias
 
-# PROJECT UPDATE
-echo "Creating pre-commit hook for Code Analyzer"
-echo -e "// lint-staged.config.js
-module.exports = {
-  \"**/*.cls\": (filenames) => \"sf scanner run -f table -s 3 -t \" + filenames.join(\", \") 
-};
-" > lint-staged.config.js
+if ! $ORG_ONLY; then
+  # PROJECT UPDATE
+  echo "Creating pre-commit hook for Code Analyzer"
+  echo -e "// lint-staged.config.js
+  module.exports = {
+    \"**/*.cls\": (filenames) => \"sf scanner run -f table -s 3 -t \" + filenames.join(\", \") 
+  };
+  " > lint-staged.config.js
 
-echo "Creating GitHub Action Workflow Rules"
-mkdir -p .github/workflows
-cp -a "${oc_installedDir}/../fileTemplates/workflows/." .github/workflows/
+  echo "Creating GitHub Action Workflow Rules"
+  mkdir -p .github/workflows
+  cp -a "${oc_installedDir}/../fileTemplates/workflows/." .github/workflows/
 
-# GITHUB REPO
-if $oc_github
-then
-  echo "Creating a git repo locally and on GitHub"
-  git init 
-  custom_host=false
-  # if oc_githubRemote 
-  for i in "${!oc_remoteNames[@]}"; do
-    if [ "${oc_remoteNames[$i]}" == "$oc_githubRemote" ]; then
-      custom_host=true
-      if [ "${oc_remoteUrls[$i]}" != "" ]; then
-        export GH_HOST="${oc_remoteUrls[$i]}"
+  # GITHUB REPO
+  if $oc_github
+  then
+    echo "Creating a git repo locally and on GitHub"
+    git init 
+    custom_host=false
+    # if oc_githubRemote 
+    for i in "${!oc_remoteNames[@]}"; do
+      if [ "${oc_remoteNames[$i]}" == "$oc_githubRemote" ]; then
+        custom_host=true
+        if [ "${oc_remoteUrls[$i]}" != "" ]; then
+          export GH_HOST="${oc_remoteUrls[$i]}"
+        fi
+        break
       fi
-      break
-    fi
-  done
-  gh repo create $oc_datedAlias --private  -s .  --disable-wiki --disable-issues
-else
-  echo "Github CLI not setup, skipping Git-related steps"
-fi
+    done
+    gh repo create $oc_datedAlias --private  -s .  --disable-wiki --disable-issues
+  else
+    echo "Github CLI not setup, skipping Git-related steps"
+  fi
 
-# INSTALL DEPENDENCIES
-echo "Installing dependencies"
-npm i
+  # INSTALL DEPENDENCIES
+  echo "Installing dependencies"
+  npm i
+fi 
