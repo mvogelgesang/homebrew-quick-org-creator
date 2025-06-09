@@ -130,9 +130,11 @@ Assumes all changes to scripts and templates are committed and merged into main.
 
 `git push origin main`
 
-`git tag -a v{versionNumber} -m {versionNumber}`
-
 `echo -n $versionNumber>VERSION`
+
+`git add VERSION`
+
+`git commit -m ${versionNumber}`
 
 `git tag -a v${versionNumber} -m ${versionNumber}`
 
