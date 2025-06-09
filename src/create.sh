@@ -113,7 +113,7 @@ done
 # GITHUB
 if [ -z "${oc_remoteNames[*]}" ]
 then
-  echo -e "${oc_COLOR_QUESTION}DevHub (leave blank for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
+  echo -e "${oc_COLOR_QUESTION}Git Remote (leave blank for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
   read remote
 else
   echo -e "${oc_COLOR_QUESTION}DevHub (enter 0 for default "$oc_defaultRemote")${oc_COLOR_NOCOLOR}"
