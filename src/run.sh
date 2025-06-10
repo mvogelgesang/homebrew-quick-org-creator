@@ -7,6 +7,7 @@ export oc_update="N"
 export oc_installedDir="$(brew --prefix quick-org-creator)/libexec"
 export oc_configFilePath="$HOME/.quick-org-creator/"
 export oc_configFileName="${oc_configFilePath}.config"
+export oc_defaultScratchDefFile="${oc_configFilePath}defaultScratchDef.json"
 export oc_github=false
 export oc_currentWorkingDirectory=$(pwd)
 
