@@ -53,28 +53,42 @@ update_or_add_var() {
 # A function to echo out pretty messages
 # usage:
 # _message "type" "message"
-#   type: question, warning, error, header, info
+#   type?: question, warning, error, header, info
 #   message: string to echo out
 _message() {
+  # If only one argument is provided, default the TYPE to "info"
+  # and treat the single argument as the MESSAGE.
+  if [ "$#" -eq 1 ]; then
+    set -- "info" "$1"
+  fi
+
+  local TYPE="$1"
+  local MESSAGE="$2"
   TYPE=$1
   MESSAGE=$2
 
   case $TYPE in
+    "error")
+      echo -e "${oc_COLOR_ERROR}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
+      ;;
+    "notification")
+      echo -e "${oc_COLOR_NOTIFICATION}${MESSAGE}${oc_COLOR_NOCOLOR}"
+      ;;
     "question")
       echo -e "${oc_COLOR_QUESTION}${MESSAGE}${oc_COLOR_NOCOLOR}"
       ;;
-    "warning")
-      echo -e "${oc_COLOR_WARN}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
-      ;;
-    "error")
-      echo -e "${oc_COLOR_ERROR}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
+    "success")
+      echo -e "${oc_COLOR_SUCCESS}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
       ;;
     "theme")
       echo -e "${oc_COLOR_THEME}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
       ;;
+    "warn")
+      echo -e "${oc_COLOR_WARN}${MESSAGE}${oc_COLOR_NOCOLOR}" >&2
+      ;;
     *)
       # Default case for info, headers, etc.
-      echo "${MESSAGE}"
+      echo -e "${MESSAGE}"
       ;;
   esac
 }
