@@ -10,32 +10,11 @@ export oc_configFileName="${oc_configFilePath}.config"
 export oc_github=false
 export oc_currentWorkingDirectory=$(pwd)
 
+source ${oc_installedDir}/functions.sh
 
-## Colors
-export oc_COLOR_WHITE='\033[0;37m' #cWhite
-# ='\033[0;34m'  #cBlue
-# ='\033[0;36m' #cCyan
-export oc_COLOR_QUESTION='\033[0;96m' #cLightCyan
-#='\033[0;94m' #cLightBlue
-export oc_COLOR_SUCCESS='\033[0;32m' #cGreen
-export oc_COLOR_WARN='\033[0;33m' #cYellow
-export oc_COLOR_THEME='\033[0;35m' #cMagenta
-export oc_COLOR_ERROR='\033[0;31m' #cRed
-export oc_COLOR_NOTIFICATION='\033[0;44m' #bBlue
-#='\033[0;46m' #bCyan
-#='\033[0;104m' #bLightBlue
-#='\033[0;106m' #bLightCyan
-export oc_COLOR_NOCOLOR='\033[0;0m' #cNoColor
-export oc_arrow="  -> "
 version=$(cat ${oc_installedDir}/VERSION)
 
-echo -e "${oc_COLOR_THEME}
-===================================================
- __   __   __      __   __   ___      ___  __   __  
-/  \ |__) / _\`    /  \` |__) |__   /\   |  /  \ |__) 
-\__/ |  \ \__>    \__, |  \ |___ /~~\  |  \__/ |  \\
-=================================================== 
-${oc_COLOR_NOCOLOR}"                                                    
+_message "theme" "$oc_TITLE"                          
 
 source "${oc_installedDir}/dependencies.sh"
 
@@ -47,14 +26,14 @@ fi
 if test -f "${oc_configFileName}"; then
   source "${oc_configFileName}"
   else
-  echo -e "${oc_COLOR_WARN}It looks like a config file is not setup, let's create one...${oc_COLOR_NOCOLOR}"
+  _message "warning" "It looks like a config file is not setup, let's create one..."
   source "${oc_installedDir}/config.sh"
   source "${oc_configFileName}"
 fi
 
 # Check for updates
 if brew outdated | grep -q '^quick-org-creator '; then
-  echo "An update for mvogelgesang/quick-org-creator is available. You can update it with 'brew upgrade mvogelgesang/quick-org-creator'."
+  _message "An update for mvogelgesang/quick-org-creator is available. You can update it with 'brew upgrade mvogelgesang/quick-org-creator'."
 fi
 
 arg=$1
@@ -62,37 +41,33 @@ arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
 
 case $arg in
   "namespace")
-    echo "Updating namespace list"
-    echo ""
+    _message "Updating namespace list...\n"
     source "${oc_installedDir}/namespace.sh"
     ;;
   "config")
-    echo "Opening config editor"
-    echo ""
+    _message "Opening config editor...\n"
     source "${oc_installedDir}/config.sh"
     ;;
   "devhub")
-    echo "Updating DevHub list"
-    echo ""
+    _message "Updating DevHub list..."
     source "${oc_installedDir}/devHub.sh"
     ;;
   "remote")
-    echo "Configuring Remotes"
-    echo ""
+    _message "Configuring Remotes..."
     source "${oc_installedDir}/remotes.sh"
     ;;
   "--version")
-    echo $version
+    _message "theme" $version
     ;;
   "help")
-    echo "Quick Org Creator Commands"
-    echo ""
-    echo "config        - Runs configuration update and lets you set default params"
-    echo "devhub        - Refreshes the list of authenticated DevHub orgs"
-    echo "help          - Prints all commands"
-    echo "namespace     - Refreshes the list of namespaces assocated with a given DevHub"
-    echo "remote        - Configure the list of remotes used."
-    echo "--version     - Prints the current version of Quick Org Creator"
+    _message "Quick Org Creator Commands"
+    _message "  config        - Runs configuration update and lets you set default params"
+    _message "  devhub        - Refreshes the list of authenticated DevHub orgs"
+    _message "  help          - Prints all commands"
+    _message "  namespace     - Refreshes the list of namespaces assocated with a given DevHub"
+    _message "  remote        - Configure the list of remotes used."
+    _message "  -o            - Creates only the scratch org, does not create repo or project directory"
+    _message "  --version     - Prints the current version of Quick Org Creator"
     ;;
   *)
     source "${oc_installedDir}/create.sh"
