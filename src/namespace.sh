@@ -8,9 +8,9 @@ results_string=$(IFS=" "; echo "${results[*]}")
 
 update_or_add_var "oc_namespaceArray" "${oc_configFileName}" "${results[@]}"
 
-echo "List of namespaces updated successfully"
+_message "List of namespaces updated successfully"
 # Print the entries of the array
 for entry in "${results[@]}"; do
   entry=${entry//\"/}
-  echo "  -$entry"
+  _message "  -$entry"
 done
