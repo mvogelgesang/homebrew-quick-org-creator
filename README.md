@@ -19,6 +19,8 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
   - [Local Testing](#local-testing)
     - [Restoring Production Version Locally](#restoring-production-version-locally)
   - [Deploying](#deploying)
+    - [Scripted Instructions](#scripted-instructions)
+    - [Legacy Instructions](#legacy-instructions)
 
 ## Installation
 
@@ -115,6 +117,14 @@ Prints the current version of Quick Org Creator.
 Removes locally built version of package and installs from tap.
 
 ## Deploying
+
+### Scripted Instructions
+
+*Note* - scripted instructions change the tag naming pattern and remove the leading "v" from tag names.
+
+`./build/publish-release.sh`
+
+### Legacy Instructions
 
 Assumes all changes to scripts and templates are committed and merged into main.
 
