@@ -92,3 +92,107 @@ _message() {
       ;;
   esac
 }
+
+# merge two scratch definition files
+# The merged content is stored in a temporary file that is cleaned up once the complete script is executed
+#
+# Usage:
+# mergeScratchDef selectedTemplate.json defaultSettings.json
+
+mergeScratchDef() {
+
+  # --- 1. Input and Dependency Validation ---
+  # Ensure two arguments are provided
+  if [ "$#" -ne 3 ]; then
+      _message "warn" "Error: Invalid number of arguments."
+      _message "Usage: $0 <base_file.json> <override_file.json> <tempfile>"
+      exit 1
+  fi
+
+  BASE_FILE="$1"
+  OVERRIDE_FILE="$2"
+  FINAL_TEMP_FILE="$3"
+
+  # Check if jq is installed
+  if ! command -v jq &> /dev/null; then
+      _message "error" "Error: jq is not installed. Please install it to continue."
+      _message "On macOS: brew install jq"
+      _message "On Debian/Ubuntu: sudo apt-get install jq"
+      exit 1
+  fi
+
+  # Check if input files exist
+  if [ ! -f "$BASE_FILE" ] || [ ! -f "$OVERRIDE_FILE" ]; then
+      _message "error" "Error: One or both input files could not be found."
+      exit 1
+  fi
+
+
+  # --- 2. Temporary File and Cleanup ---
+
+  # Create a temporary file that will be automatically cleaned up.
+  # mktemp creates a unique, secure temporary file.
+  TMP_FILE=$(mktemp)
+  
+
+  # Set up a "trap" to automatically remove the temporary file when the script exits.
+  # This ensures cleanup happens even if the script fails or is interrupted.
+  trap 'rm -f "$TMP_FILE"' EXIT
+
+  # --- 3. Merging Logic ---
+
+  # -----------------------------------------------------------------------------
+  # MERGE LOGIC
+  #
+  # This jq command merges the two JSON files ($BASE_FILE and $OVERRIDE_FILE)
+  # giving precedence to the second file for any conflicting keys.
+  #
+  # It applies special logic for the "features" array to handle overrides for
+  # "key:value" formatted strings. For any given key (the text before a colon),
+  # the version from the override file will be the one present in the final output.
+  #
+  # How it works:
+  #
+  # 1. `$final_features` variable:
+  #    First, it calculates the correct final state of the 'features' array
+  #    and stores it in a variable named `$final_features`.
+  #    a. It concatenates the 'features' arrays from both files, ensuring that
+  #       the override elements come after the base elements.
+  #    b. It then pipes this combined array through a filter that converts it
+  #       into a temporary object, using the text before any colon as the key.
+  #       This process de-duplicates the entries, as later values (from the
+  #       override file) overwrite earlier ones with the same key.
+  #    c. Finally, it converts the de-duplicated object's values back into a
+  #       clean array.
+  #
+  # 2. Final Merge:
+  #    It performs a standard recursive merge ('*') on the two files and then
+  #    replaces the resulting 'features' key with the correct array that was
+  #    stored in the `$final_features` variable.
+  # -----------------------------------------------------------------------------
+  jq -s '
+    # First, calculate the correctly merged "features" array and store it in a variable.
+    (
+      # Safely get and concatenate the features arrays from both files.
+      (.[0].features // []) + (.[1].features // []) 
+      # Apply the new key-based merging logic.
+      | (map({(.|split(":")[0]):.}) | add | values)
+    ) as $final_features |
+
+    # Now, do the simple merge and immediately set the features key to our variable.
+    (.[0] * .[1] | .features = $final_features)
+  ' "$BASE_FILE" "$OVERRIDE_FILE" > "$TMP_FILE"
+  
+  # Extract values from the resultant features object into an array
+  # delete the existing features object
+  # replace with features as an array, write to a new temporary file
+  jq '[(.features[] | values)] as $featuresArray | del(.features) + { "features": $featuresArray }' "$TMP_FILE" > "$FINAL_TEMP_FILE"
+
+
+  # Check if jq command was successful
+  if [ $? -ne 0 ]; then
+      _message "error" "Error: jq merge command failed. Check if JSON files are valid."
+      # The 'trap' will still clean up the temp file upon exit.
+      exit 1
+  fi
+}

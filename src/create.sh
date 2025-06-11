@@ -65,7 +65,18 @@ _message "question" "\nScratch Definition (Enter 0 for default "$oc_scratchDef")
       break;
     fi
 done
-_message Scratch definition set: $oc_scratchDef
+_message "Scratch definition set: $oc_scratchDef"
+
+# MERGE SCRATCH DEFINITION WITH DEFAULTS
+TMP_SCRATCH_DEF=$(mktemp)
+trap 'rm -f "$TMP_SCRATCH_DEF"' EXIT
+
+if [ -f "$oc_defaultScratchDefFile" ]; then
+  _message "Applying scratch org default values/settings from $oc_defaultScratchDefFile"
+  mergeScratchDef "$oc_scratchDef" "$oc_defaultScratchDefFile" "$TMP_SCRATCH_DEF"
+  oc_scratchDef="$TMP_SCRATCH_DEF"
+fi
+
 
 if ! $ORG_ONLY; then
   # PROJECT DIRECTORY 
