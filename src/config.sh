@@ -65,6 +65,19 @@ done
 
 update_or_add_var "oc_scratchDef" "${oc_configFileName}" $scratchDef
 
+_message "question" "Do you want to update default settings/ features for scratch definition files (y/n)?"
+read updateDefaultScratchDef
+  if [[ $updateDefaultScratchDef =~ ^[Yy]$ ]]; then
+    if [ ! -f "$oc_defaultScratchDefFile"]; then
+      _message "Default scratch def not found, preparing file..."
+      echo -e "{}" > "$oc_defaultScratchDefFile"
+    fi
+    _message "Opening default scratch def file...\n"
+    code $oc_defaultScratchDefFile
+  else
+    break
+  fi
+
 # SCRATCH ORG DURATION DEFAULT
 duration_input_valid=false
 while [ "$duration_input_valid" = false ]; do
