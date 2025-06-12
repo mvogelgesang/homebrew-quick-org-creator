@@ -113,10 +113,10 @@ Prints the current version of Quick Org Creator.
 
 ## Delivered Features
 
-✔️ [Issue 52](https://github.com/mvogelgesang/quick-org-creator/issues/52) - Create and manage common settings/ features to apply to all scratch orgs.
-✔️ [Issue 48](https://github.com/mvogelgesang/quick-org-creator/issues/48) - Create only the org, no project directory
-✔️ [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates
-✔️ Include a readme file in each directory containing more details about the scratch org, why it was created, etc
+- ✔️ [Issue 52](https://github.com/mvogelgesang/quick-org-creator/issues/52) - Create and manage common settings/ features to apply to all scratch orgs.
+- ✔️ [Issue 48](https://github.com/mvogelgesang/quick-org-creator/issues/48) - Create only the org, no project directory
+- ✔️ [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates
+- ✔️ Include a readme file in each directory containing more details about the scratch org, why it was created, etc
 
 ## Local Testing
 
