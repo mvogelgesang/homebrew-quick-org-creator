@@ -37,32 +37,62 @@ if brew outdated | grep -q '^quick-org-creator '; then
   _message "An update for mvogelgesang/quick-org-creator is available. You can update it with 'brew upgrade mvogelgesang/quick-org-creator'."
 fi
 
-arg=$1
-arg=$(echo $arg | tr '[:upper:]' '[:lower:]')
+if [[ "$1" == "--version" ]]; then
+  _message "theme" $version
+  exit 0 # Exit after printing version
+fi
 
-case $arg in
+# The main action is the first argument
+action="$1"
+action=$(echo "$action" | tr '[:upper:]' '[:lower:]')
+
+# After getting the action, shift the arguments.
+# This makes the sub-action (if any) become the new $1.
+shift
+
+case $action in
   "namespace")
     _message "Updating namespace list...\n"
     source "${oc_installedDir}/namespace.sh"
     ;;
+
   "config")
-    _message "Opening config editor...\n"
-    source "${oc_installedDir}/config.sh"
+    # At this point, "config" has been processed and shifted away.
+    # The new $1 is either "list", another sub-action, or empty.
+    sub_action="$1"
+    sub_action=$(echo "$sub_action" | tr '[:upper:]' '[:lower:]')
+
+    case $sub_action in
+      "list")
+        _message "Listing current configuration...\n"
+        source "${oc_installedDir}/config-list.sh"
+        ;;
+      "")
+        # Handles the case where the user just typed "oc config"
+        _message "Opening config editor...\n"
+        source "${oc_installedDir}/config.sh"
+        ;;
+      *)
+        _message "Error: Unknown subcommand '$sub_action' for config." >&2
+        exit 1
+        ;;
+    esac
     ;;
+
   "devhub")
     _message "Updating DevHub list..."
     source "${oc_installedDir}/devHub.sh"
     ;;
+
   "remote")
     _message "Configuring Remotes..."
     source "${oc_installedDir}/remotes.sh"
     ;;
-  "--version")
-    _message "theme" $version
-    ;;
+
   "help")
     _message "Quick Org Creator Commands"
     _message "  config        - Runs configuration update and lets you set default params"
+    _message "  config list   - Prints the contents of the config file"
     _message "  devhub        - Refreshes the list of authenticated DevHub orgs"
     _message "  help          - Prints all commands"
     _message "  namespace     - Refreshes the list of namespaces assocated with a given DevHub"
@@ -71,7 +101,9 @@ case $arg in
     _message "  --version     - Prints the current version of Quick Org Creator"
     ;;
   *)
-    source "${oc_installedDir}/create.sh"
+    # The default case runs create.sh. We pass any remaining arguments to it.
+    # The original $1 (the action) was shifted, so "$@" contains any sub-args.
+    source "${oc_installedDir}/create.sh" "$action" "$@"
     ;;
 esac
 

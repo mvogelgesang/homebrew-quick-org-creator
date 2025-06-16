@@ -196,3 +196,88 @@ mergeScratchDef() {
       exit 1
   fi
 }
+
+#
+# Prints a formatted list from an array of strings.
+# @param {string} title   The title to print above the list.
+# @param {array}  ...     All subsequent arguments are the array elements.
+#
+# Usage:
+#   local my_array=("apple" "banana" "cherry")
+#   print_array "My Fruit List" "${my_array[@]}"
+#
+print_array() {
+  # The first argument is the title.
+  local title="$1"
+  shift # Remove the title from the argument list.
+
+  # All remaining arguments are now the array items.
+  # We can store them in a local array.
+  local items=("$@")
+
+  # Print a header for the list.
+  _message "$title"
+
+  # Check if the array is empty.
+  if [ ${#items[@]} -eq 0 ]; then
+    printf "  <empty>\n"
+    return
+  fi
+
+  # Loop through the items and print each one.
+  for item in "${items[@]}"; do
+    printf "  - %s\n" "$item"
+  done
+}
+
+#
+# Prints two arrays side-by-side in a table.
+# This version is compatible with older versions of Bash (pre-4.3).
+#
+# @param {string} title       Title for the overall table.
+# @param {string} col1title   Title for the first column.
+# @param {string} array1_name The NAME of the first array variable.
+# @param {string} col2title   Title for the second column.
+# @param {string} array2_name The NAME of the second array variable.
+#
+# Usage:
+#   local arr1=("a" "b" "c")
+#   local arr2=("x" "y")
+#   print_arrays_parallel "My title" "Col 1" arr1 "Col 2" arr2
+#
+print_arrays_parallel() {
+  local title="$1"
+  local col1title="$2"
+  local array1_name="$3"
+  local col2title="$4"
+  local array2_name="$5"
+
+  # To get the length of the arrays using their names, we use 'eval'.
+  # This is a safe use of eval as the variable names are controlled by the script.
+  local len1=$(eval echo "\${#$array1_name[@]}")
+  local len2=$(eval echo "\${#$array2_name[@]}")
+  local max_len=$(( len1 > len2 ? len1 : len2 ))
+
+  # Print table headers
+  _message "--------------------------------------------------------------"
+  _message "                        $title"
+  _message "--------------------------------------------------------------"
+  printf "%-28s | %s\n" "$col1title" "$col2title"
+  _message "--------------------------------------------------------------"
+
+  # Loop from 0 to max_len - 1
+  for (( i=0; i<max_len; i++ )); do
+    # For each array, create a string representing the indexed element,
+    # e.g., "my_array[0]", then use indirect expansion '${!ref}' to get its value.
+    local item1_ref="${array1_name}[i]"
+    local item2_ref="${array2_name}[i]"
+
+    # If the index is out of bounds, the value will be empty.
+    local item1="${!item1_ref}"
+    local item2="${!item2_ref}"
+
+    # Print the formatted row
+    printf "%-28s | %s\n" "$item1" "$item2"
+  done
+  _message "--------------------------------------------------------------\n"
+}
