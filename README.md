@@ -8,9 +8,11 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
   - [Running](#running)
     - [Create a new scratch org](#create-a-new-scratch-org)
     - [Refresh config and defaults](#refresh-config-and-defaults)
+    - [Print Current Configs](#print-current-configs)
     - [Refresh list of DevHub orgs](#refresh-list-of-devhub-orgs)
     - [Refresh namespace list](#refresh-namespace-list)
     - [Print commands](#print-commands)
+    - [Create Org Only](#create-org-only)
     - [Check version](#check-version)
   - [Updating](#updating)
   - [Outputs](#outputs)
@@ -56,7 +58,14 @@ Allows you to set default values for:
 
 - DevHub
 - Project folder location
+- Default scratch org duration
 - Scratch Definition File
+- Default scratch definition features/ settings that always get applied
+- Manage multiple Git remotes and set default
+
+### Print Current Configs
+
+`oc config list`
 
 ### Refresh list of DevHub orgs
 
@@ -75,6 +84,12 @@ Refreshes the list of namespaces associated with your default DevHub org.
 `oc help`
 
 Prints all commands and brief descriptions of each.
+
+### Create Org Only
+
+`oc -o`
+
+Creates an org but skips steps to create associated project directory or github repo.
 
 ### Check version
 
@@ -103,8 +118,11 @@ Prints the current version of Quick Org Creator.
 
 ## Delivered Features
 
-✔️ [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates
-✔️ Include a readme file in each directory containing more details about the scratch org, why it was created, etc
+- ✔️ [Issue 55](https://github.com/mvogelgesang/quick-org-creator/issues/55) - Print list of current configuration variables.
+- ✔️ [Issue 52](https://github.com/mvogelgesang/quick-org-creator/issues/52) - Create and manage common settings/ features to apply to all scratch orgs.
+- ✔️ [Issue 48](https://github.com/mvogelgesang/quick-org-creator/issues/48) - Create only the org, no project directory
+- ✔️ [Issue 3](https://github.com/mvogelgesang/quick-org-creator/issues/3) - Check for repo updates
+- ✔️ Include a readme file in each directory containing more details about the scratch org, why it was created, etc
 
 ## Local Testing
 
