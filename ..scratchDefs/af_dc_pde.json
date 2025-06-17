@@ -1,16 +1,23 @@
 {
   "orgName": "my company",
-  "edition": "Developer",
+  "edition": "Partner Developer",
   "features": [
     "EnableSetPasswordInApi",
     "CustomerDataPlatform",
     "CustomerDataPlatformLite",
+    "Einstein1AIPlatform",
     "EinsteinGPTForDevelopers",
     "MarketingUser"
   ],
   "settings": {
+    "caseSettings": {
+      "closeCaseThroughStatusChange": true
+    },
     "customerDataPlatformSettings": {
       "enableCustomerDataPlatform": "true"
+    },
+    "EinsteinGptSettings": {
+      "enableEinsteinGptPlatform": "true"
     },
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true,
