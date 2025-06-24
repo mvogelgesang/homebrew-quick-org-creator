@@ -4,68 +4,92 @@ _message "Creating a new scratch org...\n"
 
 # check if org-only flag "-o" is passed
 ORG_ONLY=false
-while getopts "o" opt; do
-  case ${opt} in
-    o )
-      # If the -o flag is found, user just wants the org
-      ORG_ONLY=true
-      ORG_ONLY_HEADER="
-      -------------------
-      -- org-only mode --
-      -------------------
-      "
-      _message $ORG_ONLY_HEADER
+USE_DEFAULTS=false
+NON_OPTION_ARGS=()
+
+for arg in "$@"; do
+  case "$arg" in
+    -y)
+      USE_DEFAULTS=true
       ;;
-    \? )
-      # Handle any unknown flags.
-      _message "warning" "Invalid option: -$OPTARG" >&2
+    -o)
+      ORG_ONLY=true
+      ;;
+    -*)
+      _message "error" "Unknown option: $arg" >&2
       exit 1
+      ;;
+    *)
+      NON_OPTION_ARGS+=("$arg")
       ;;
   esac
 done
 
-# DEV HUB
-if [ -z "${oc_devHubArray[*]}" ]
-then
-  _message "question" "DevHub (leave blank for default \"$oc_devHub\")"
-  read alias
-else
-  _message "question" "DevHub (enter 0 for default \"$oc_devHub\")"
-  select dh in "${oc_devHubArray[@]}"; do
-    if [ $REPLY == "0" ]; then
-      alias=$oc_devHub
-      break;
-    elif [[ -n $dh ]]; then
-      alias=$dh
-      break;
-    else
-      _message "warn" "Invalid selection, try again" >&2
+oc_alias="${NON_OPTION_ARGS[0]}"
+
+if $USE_DEFAULTS; then
+    _message "
+    -------------------
+    -- default mode --
+    -------------------
+    "
+    if [ -z "$oc_alias" ]; then
+        _message "error" "Error: Alias is required for default mode (e.g. oc -y my-alias)." >&2
+        exit 1
     fi
-  done
 fi
-oc_devHub=$alias
+
+# DEV HUB
+if ! $USE_DEFAULTS; then
+  if [ -z "${oc_devHubArray[*]}" ]
+  then
+    _message "question" "DevHub (leave blank for default \"$oc_devHub\")"
+    read alias
+  else
+    _message "question" "DevHub (enter 0 for default \"$oc_devHub\")"
+    select dh in "${oc_devHubArray[@]}"; do
+      if [ $REPLY == "0" ]; then
+        alias=$oc_devHub
+        break;
+      elif [[ -n $dh ]]; then
+        alias=$dh
+        break;
+      else
+        _message "warn" "Invalid selection, try again" >&2
+      fi
+    done
+  fi
+  oc_devHub=$alias
+fi
 
 _message "This script will create a new scratch org off of $oc_devHub.\n"
 
 # PROJECT / ORG ALIAS
-_message "question" "What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc."
-read oc_alias
+if ! $USE_DEFAULTS; then
+  _message "question" "What is the alias for the org? This might be a Org62 case number (37711301-pushUpgrades), trailhead exercise, etc."
+  read oc_alias
+fi
 oc_datedAlias+=$oc_alias
 
 # SCRATCH DEFINITION
-_message "question" "\nScratch Definition (Enter 0 for default "$oc_scratchDef")"
-  select file in "${oc_installedDir}/..scratchDefs/"*.json; do
-    if [ $REPLY == "0" ]; then
-      _message Default chosen
-      break;
-    elif [[ -z $file ]]; then
-      _message "warn" "Invalid selection, try again" >&2
-    else
-      oc_scratchDef=$file
-      break;
-    fi
-done
+if ! $USE_DEFAULTS; then
+  _message "question" "\nScratch Definition (Enter 0 for default "$oc_scratchDef")"
+    select file in "${oc_installedDir}/..scratchDefs/"*.json; do
+      if [ $REPLY == "0" ]; then
+        _message Default chosen
+        break;
+      elif [[ -z $file ]]; then
+        _message "warn" "Invalid selection, try again" >&2
+      else
+        oc_scratchDef=$file
+        break;
+      fi
+  done
+fi
 _message "Scratch definition set: $oc_scratchDef"
+
+# Store the original scratch def file for display purposes
+display_scratchDef="$oc_scratchDef"
 
 # MERGE SCRATCH DEFINITION WITH DEFAULTS
 TMP_SCRATCH_DEF=$(mktemp)
@@ -79,85 +103,121 @@ fi
 
 
 if ! $ORG_ONLY; then
-  # PROJECT DIRECTORY 
-  _message "question" "\nWhat folder should this go in? (Leave blank for default $oc_folder)"
-  read f
-  if [ ! -z "$f" ]
-    then
-      # ~ is not automatically expanded, first we do that. If an absolute path is provided, thats ok too
-      f="${f/#\~/$HOME}"
-      oc_folder=$f
+  if ! $USE_DEFAULTS; then
+    # PROJECT DIRECTORY 
+    _message "question" "\nWhat folder should this go in? (Leave blank for default $oc_folder)"
+    read f
+    if [ ! -z "$f" ]
+      then
+        # ~ is not automatically expanded, first we do that. If an absolute path is provided, thats ok too
+        f="${f/#\~/$HOME}"
+        oc_folder=$f
+    fi
   fi
 fi
 
 # NAMESPACE
-_message "question" "\nLet's setup a namespace for the new project. To store a list of namespaces, run \"oc namespace\""
+if ! $USE_DEFAULTS; then
+  _message "question" "\nLet's setup a namespace for the new project. To store a list of namespaces, run \"oc namespace\""
 
-  if [ -z "${oc_namespaceArray[*]}" ]
-  then
-    read -p "Enter namespace (leave blank for none): " namespace
-  else
-    _message "question" "Select a namespace from the list (enter 0 to not set a namespace):"
-    select ns in "${oc_namespaceArray[@]}"; do
-      if [ $REPLY == "0" ]; then
-        namespace=""
-        break;
-      elif [[ -n $ns ]]; then
-        namespace=$ns
-        break;
-      else
-        _message "warn" "Invalid selection, try again" >&2
-      fi
-    done
-  fi
+    if [ -z "${oc_namespaceArray[*]}" ]
+    then
+      read -p "Enter namespace (leave blank for none): " namespace
+    else
+      _message "question" "Select a namespace from the list (enter 0 to not set a namespace):"
+      select ns in "${oc_namespaceArray[@]}"; do
+        if [ $REPLY == "0" ]; then
+          namespace=""
+          break;
+        elif [[ -n $ns ]]; then
+          namespace=$ns
+          break;
+        else
+          _message "warn" "Invalid selection, try again" >&2
+        fi
+      done
+    fi
+else
+  namespace=""
+fi
 
-  if [ -z "$namespace" ]
-  then
-    _message "No namespace has been set for this project."
-    nsFlag=""
-  else
-    _message "The namespace for this project is set to $namespace."
-    nsFlag="-s $namespace"
-  fi
+if [ -z "$namespace" ]
+then
+  _message "No namespace has been set for this project."
+  nsFlag=""
+else
+  _message "The namespace for this project is set to $namespace."
+  nsFlag="-s $namespace"
+fi
 
 # SCRATCH ORG DURATION 
-duration_input_valid=false
-while [ "$duration_input_valid" = false ]; do
-    _message "question" "\nSet scratch org duration (1-30), leave blank for default ($oc_duration)."
-    read days
+if ! $USE_DEFAULTS; then
+  duration_input_valid=false
+  while [ "$duration_input_valid" = false ]; do
+      _message "question" "\nSet scratch org duration (1-30), leave blank for default ($oc_duration)."
+      read days
 
-    if [ -z "$days" ] && [ ! -z "$oc_duration" ]; then
-      duration_input_valid=true
-    # Check if input is an integer and between 1 and 30
-    elif [[ "$days" =~ ^[0-9]+$ ]] && [ "$days" -ge 1 ] && [ "$days" -le 30 ]; then
+      if [ -z "$days" ] && [ ! -z "$oc_duration" ]; then
         duration_input_valid=true
-        oc_duration=$days
-    else
-        _message "warn" "Please enter a number between 1 and 30."
-    fi
-done
+      # Check if input is an integer and between 1 and 30
+      elif [[ "$days" =~ ^[0-9]+$ ]] && [ "$days" -ge 1 ] && [ "$days" -le 30 ]; then
+          duration_input_valid=true
+          oc_duration=$days
+      else
+          _message "warn" "Please enter a number between 1 and 30."
+      fi
+  done
+fi
 
 if ! $ORG_ONLY; then
   # GITHUB
-  if [ -z "${oc_remoteNames[*]}" ]
-  then
-    _message "question" "Git Remote (leave blank for default \"$oc_defaultRemote\")"
-    read remote
+  if ! $USE_DEFAULTS; then
+
+    if [ -z "${oc_remoteNames[*]}" ]
+    then
+      _message "question" "Git Remote (leave blank for default \"$oc_defaultRemote\")"
+      read remote
+    else
+      _message "question" "DevHub (enter 0 for default \"$oc_defaultRemote\")"
+      select r in "${oc_remoteNames[@]}"; do
+        if [ $REPLY == "0" ]; then
+          remote=$oc_defaultRemote
+          break;
+        elif [[ -n $r ]]; then
+          remote=$r
+          break;
+        else
+          _message "warn" "Invalid selection, try again" >&2
+        fi
+      done
+    fi
+    oc_githubRemote=$remote
   else
-    _message "question" "DevHub (enter 0 for default \"$oc_defaultRemote\")"
-    select r in "${oc_remoteNames[@]}"; do
-      if [ $REPLY == "0" ]; then
-        remote=$oc_defaultRemote
-        break;
-      elif [[ -n $r ]]; then
-        remote=$r
-        break;
-      else
-        _message "warn" "Invalid selection, try again" >&2
-      fi
-    done
+    oc_githubRemote=$oc_defaultRemote
   fi
-  oc_githubRemote=$remote
+fi
+
+if $USE_DEFAULTS; then
+  _message "theme" "\n--- Configuration for new org ---"
+  printf "%-28s: %s\n" "Alias" "$oc_alias"
+  printf "%-28s: %s\n" "Dev Hub" "$oc_devHub"
+  printf "%-28s: %s\n" "Scratch Definition" "$(basename "$display_scratchDef")"
+  if ! $ORG_ONLY; then
+    printf "%-28s: %s\n" "Project Path" "$oc_folder/$oc_datedAlias"
+  fi
+  printf "%-28s: %s\n" "Namespace" "${namespace:-None}"
+  printf "%-28s: %s\n" "Duration" "$oc_duration days"
+  if ! $ORG_ONLY && [ -n "$oc_githubRemote" ]; then
+    printf "%-28s: %s\n" "GitHub Remote" "$oc_githubRemote"
+  fi
+  _message "theme" "--------------------------------------"
+
+  _message "question" "Proceed with these settings? (y/n)"
+  read -r confirmation
+  if [[ ! "$confirmation" =~ ^[Yy]$ ]]; then
+      _message "warn" "Aborted by user."
+      exit 1
+  fi
 fi
 
 _message "This script will create a new scratch org off of $oc_devHub."
@@ -173,8 +233,12 @@ if ! $ORG_ONLY; then
   cp -f $oc_scratchDef $oc_folder/$oc_datedAlias/config/project-scratch-def.json
 
   # UPDATE README
-  _message "question" "Describe this goals for this project"
-  read goals
+  if ! $USE_DEFAULTS; then
+    _message "question" "Describe this goals for this project"
+    read goals
+  else
+    goals="Project created in unattended mode"
+  fi
   echo "# ${oc_alias}" > $oc_folder/$oc_datedAlias/README.md
   echo "" >> $oc_folder/$oc_datedAlias/README.md
   echo $goals >> $oc_folder/$oc_datedAlias/README.md
