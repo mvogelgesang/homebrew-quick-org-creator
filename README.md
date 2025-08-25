@@ -35,6 +35,9 @@ A homebrew package to manage the repeated creation of scratch orgs for day to da
 - [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli)
 - [Git](https://git-scm.com/)
 - [GitHub CLI (Optional)](https://cli.github.com/)
+- IDE with CLI support:
+  - [VSCode](https://code.visualstudio.com/) with `code` command in PATH (default)
+  - [Cursor](https://cursor.com/) with `cursor` command in PATH (configurable)
 
 ## Running
 
@@ -62,6 +65,7 @@ Allows you to set default values for:
 - Scratch Definition File
 - Default scratch definition features/ settings that always get applied
 - Manage multiple Git remotes and set default
+- Preferred IDE (VSCode or Cursor)
 
 ### Print Current Configs
 

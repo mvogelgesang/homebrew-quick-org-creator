@@ -73,7 +73,7 @@ read updateDefaultScratchDef
       echo -e "{}" > "$oc_defaultScratchDefFile"
     fi
     _message "Opening default scratch def file...\n"
-    code $oc_defaultScratchDefFile
+    open_ide $oc_defaultScratchDefFile
   else
     break
   fi
@@ -92,6 +92,22 @@ while [ "$duration_input_valid" = false ]; do
         _message "warn" "Please enter a number between 1 and 30."
     fi
 done
+
+# IDE PREFERENCE CONFIGURATION
+_message "question" "\nChoose your preferred IDE:"
+select ide in "VSCode" "Cursor"; do
+  if [[ $REPLY == "1" ]]; then
+    preferred_ide="vscode"
+    break;
+  elif [[ $REPLY == "2" ]]; then
+    preferred_ide="cursor"
+    break;
+  else
+    _message "warn" "Invalid selection, try again" >&2
+  fi
+done
+
+update_or_add_var "oc_preferredIDE" "${oc_configFileName}" $preferred_ide
 
 _message "success" "\nConfig file has been written to ${oc_configFileName}."
 _message "You can update your defaults at anytime by running \"oc config\"."

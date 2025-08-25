@@ -21,6 +21,7 @@ printf "%-28s: %s\n" "Default Project Folder" "$oc_folder"
 printf "%-28s: %s\n" "Default Scratch Definition" "$oc_scratchDef"
 printf "%-28s: %s\n" "Default Scratch Duration" "$oc_duration"
 printf "%-28s: %s\n" "Default Git Remote" "$oc_defaultRemote"
+printf "%-28s: %s\n" "Preferred IDE" "${oc_preferredIDE:-vscode}"
 _message ""
 # For arrays, it's best to loop through and print each element.
 print_array "Authenticated DevHubs" "${oc_devHubArray[@]}"

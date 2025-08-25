@@ -281,3 +281,65 @@ print_arrays_parallel() {
   done
   _message "--------------------------------------------------------------\n"
 }
+
+# Get the CLI command for the configured IDE
+# Returns "code" for VSCode or "cursor" for Cursor
+# Defaults to "code" if oc_preferredIDE is not set
+get_ide_command() {
+  local ide="${oc_preferredIDE:-vscode}"
+  case $ide in
+    "cursor")
+      echo "cursor"
+      ;;
+    *)
+      echo "code"
+      ;;
+  esac
+}
+
+# Get the display name for the configured IDE
+get_ide_display_name() {
+  local ide="${oc_preferredIDE:-vscode}"
+  case $ide in
+    "cursor")
+      echo "Cursor"
+      ;;
+    *)
+      echo "VSCode"
+      ;;
+  esac
+}
+
+# Check if the configured IDE CLI is available
+check_ide_available() {
+  local ide_command=$(get_ide_command)
+  local ide_name=$(get_ide_display_name)
+  
+  if ! command -v $ide_command &> /dev/null; then
+    _message "warn" ">> $ide_name \`$ide_command\` terminal command not found, you will have to launch your editor manually."
+    case $ide_command in
+      "code")
+        _message ">> To add \`code\` as a terminal command, open VSCode, press CMD+Shift+P, select Install 'code' command in PATH"
+        _message ">> If that does not work, see https://github.com/microsoft/vscode/issues/154163"
+        ;;
+      "cursor")
+        _message ">> To add \`cursor\` as a terminal command, open Cursor, press CMD+Shift+P, select Install 'cursor' command in PATH"
+        _message ">> If that does not work, see https://docs.cursor.com/get-started/install"
+        ;;
+    esac
+    return 1
+  fi
+  return 0
+}
+
+# Open a file or directory with the configured IDE
+# Usage: open_ide <path> [additional_args...]
+open_ide() {
+  local ide_command=$(get_ide_command)
+  
+  if check_ide_available; then
+    $ide_command "$@"
+  else
+    _message "warn" "Cannot open with $(get_ide_display_name) - CLI not available"
+  fi
+}
