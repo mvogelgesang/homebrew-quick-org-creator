@@ -247,9 +247,9 @@ fi
 sf org create scratch -f $oc_scratchDef -a $oc_alias -v $oc_devHub -w 10 -y $oc_duration
 _message "Scratch org creation done"
 
-# OPEN VS CODE & SET TARGET ORG
+# OPEN IDE & SET TARGET ORG
 if ! $ORG_ONLY; then
-  code $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
+  open_ide $oc_folder/$oc_datedAlias -g $oc_folder/$oc_datedAlias/README.md:2
 fi
 _message "Setting default org target"
 sf config set target-org=$oc_alias

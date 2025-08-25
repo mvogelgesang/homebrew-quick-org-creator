@@ -35,10 +35,5 @@ if [ "$missingDependency" = true ]
     _message "success" "Done.\n"
 fi
 
-# check if code is a valid command in the terminal, if not, direct user to help resources
-if ! command -v code &> /dev/null
-then
-  _message "warn" ">> VSCode `code` terminal command not found, you will have to launch your editor manually."
-  _message ">> To add `code` as a terminal command, open VSCode, press CMD+Shift+P, select Install 'code' command in PATH"
-  _message ">> If that does not work, see https://github.com/microsoft/vscode/issues/154163"
-fi
+# check if the configured IDE CLI is available
+check_ide_available
