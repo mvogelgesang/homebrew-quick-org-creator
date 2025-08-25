@@ -73,7 +73,7 @@ read updateDefaultScratchDef
       echo -e "{}" > "$oc_defaultScratchDefFile"
     fi
     _message "Opening default scratch def file...\n"
-    code $oc_defaultScratchDefFile
+    open_ide $oc_defaultScratchDefFile
   else
     break
   fi
@@ -93,6 +93,36 @@ while [ "$duration_input_valid" = false ]; do
     fi
 done
 
+# IDE PREFERENCE CONFIGURATION
+# Check if we have the upgrade system loaded (for new users going through config)
+if declare -f prompt_ide_configuration > /dev/null; then
+  _message "question" "\nLet's configure your preferred IDE:"
+  prompt_ide_configuration
+else
+  # Fallback for standalone config runs
+  _message "question" "\nChoose your preferred IDE:"
+  select ide in "VSCode" "Cursor"; do
+    if [[ $REPLY == "1" ]]; then
+      preferred_ide="vscode"
+      break;
+    elif [[ $REPLY == "2" ]]; then
+      preferred_ide="cursor"
+      break;
+    else
+      _message "warn" "Invalid selection, try again" >&2
+    fi
+  done
+  
+  update_or_add_var "oc_preferredIDE" "${oc_configFileName}" $preferred_ide
+fi
+
 _message "success" "\nConfig file has been written to ${oc_configFileName}."
+
+# Update the config version to prevent upgrade prompts after manual config
+if [ -f "${oc_installedDir}/VERSION" ]; then
+  current_version=$(cat ${oc_installedDir}/VERSION)
+  update_or_add_var "oc_lastConfigVersion" "${oc_configFileName}" "$current_version"
+fi
+
 _message "You can update your defaults at anytime by running \"oc config\"."
 _message "Continuing..."
