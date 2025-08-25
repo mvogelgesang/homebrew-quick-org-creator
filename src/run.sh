@@ -32,6 +32,10 @@ if test -f "${oc_configFileName}"; then
   source "${oc_configFileName}"
 fi
 
+# Load upgrade system and handle version migrations
+source "${oc_installedDir}/upgrade.sh"
+main_upgrade_check
+
 # Check for updates
 if brew outdated | grep -q '^quick-org-creator '; then
   _message "An update for mvogelgesang/quick-org-creator is available. You can update it with 'brew upgrade mvogelgesang/quick-org-creator'."

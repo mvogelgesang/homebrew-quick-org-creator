@@ -340,6 +340,7 @@ open_ide() {
   if check_ide_available; then
     $ide_command "$@"
   else
-    _message "warn" "Cannot open with $(get_ide_display_name) - CLI not available"
+    _message "warn" "Cannot open with $(get_ide_display_name) - CLI not available. Skipping IDE launch."
+    return 1
   fi
 }
