@@ -106,6 +106,8 @@ case "$1" in
         _message "  namespace     - Refreshes the list of namespaces assocated with a given DevHub"
         _message "  remote        - Configure the list of remotes used."
         _message "  -o            - Creates only the scratch org, does not create repo or project directory"
+        _message "  -p            - Creates a release preview org by adding \"release\": \"preview\" to project-scratch-def.json"
+        _message "  -y <alias>    - Uses default settings without prompts (requires org alias, e.g. 'oc -y my-alias')"
         _message "  --version     - Prints the current version of Quick Org Creator"
         ;;
     esac

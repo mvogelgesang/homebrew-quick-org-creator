@@ -142,9 +142,9 @@ Removes locally built version of package and installs from tap.
 
 ### Scripted Instructions
 
-*Note* - scripted instructions change the tag naming pattern and remove the leading "v" from tag names.
-
-`./build/publish-release.sh`
+- Commit all changes to local branch.
+- Open pull request agains develop branch and merge changes from local.
+- Run `./publish-release.sh #.#.#`
 
 ### Legacy Instructions
 

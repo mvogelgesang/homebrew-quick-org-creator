@@ -5,6 +5,7 @@ _message "Creating a new scratch org...\n"
 # check if org-only flag "-o" is passed
 ORG_ONLY=false
 USE_DEFAULTS=false
+RELEASE_PREVIEW=false
 NON_OPTION_ARGS=()
 
 for arg in "$@"; do
@@ -14,6 +15,9 @@ for arg in "$@"; do
       ;;
     -o)
       ORG_ONLY=true
+      ;;
+    -p)
+      RELEASE_PREVIEW=true
       ;;
     -*)
       _message "error" "Unknown option: $arg" >&2
@@ -99,6 +103,18 @@ if [ -f "$oc_defaultScratchDefFile" ]; then
   _message "Applying scratch org default values/settings from $oc_defaultScratchDefFile"
   mergeScratchDef "$oc_scratchDef" "$oc_defaultScratchDefFile" "$TMP_SCRATCH_DEF"
   oc_scratchDef="$TMP_SCRATCH_DEF"
+fi
+
+# ADD RELEASE PREVIEW IF FLAG IS SET
+if $RELEASE_PREVIEW; then
+  _message "Adding release preview setting to scratch definition"
+  # Create a new temporary file for the modified scratch def
+  TMP_PREVIEW_DEF=$(mktemp)
+  trap 'rm -f "$TMP_PREVIEW_DEF"' EXIT
+  
+  # Use jq to add the "release": "preview" property
+  jq '. + {"release": "preview"}' "$oc_scratchDef" > "$TMP_PREVIEW_DEF"
+  oc_scratchDef="$TMP_PREVIEW_DEF"
 fi
 
 
@@ -207,6 +223,9 @@ if $USE_DEFAULTS; then
   fi
   printf "%-28s: %s\n" "Namespace" "${namespace:-None}"
   printf "%-28s: %s\n" "Duration" "$oc_duration days"
+  if $RELEASE_PREVIEW; then
+    printf "%-28s: %s\n" "Release Preview" "Enabled"
+  fi
   if ! $ORG_ONLY && [ -n "$oc_githubRemote" ]; then
     printf "%-28s: %s\n" "GitHub Remote" "$oc_githubRemote"
   fi
