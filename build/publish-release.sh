@@ -75,9 +75,10 @@ NEW_SHA=$(curl -sL "${TARBALL_URL}" | shasum -a 256 | awk '{print $1}')
 echo "  New SHA-256: ${NEW_SHA}"
 
 echo "Updating Homebrew formula at ${FORMULA_FILE}..."
-# Use sed to replace the url and sha256 lines.
+# Use sed to replace the url, version, and sha256 lines.
 # The `''` after -i makes it compatible with both macOS and Linux sed.
 sed -i'' -e "s|url \".*\"|url \"${TARBALL_URL}\"|" "${FORMULA_FILE}"
+sed -i'' -e "s|version \".*\"|version \"${VERSION}\"|" "${FORMULA_FILE}"
 sed -i'' -e "s|sha256 \".*\"|sha256 \"${NEW_SHA}\"|" "${FORMULA_FILE}"
 echo "  Formula updated."
 
