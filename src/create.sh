@@ -297,6 +297,25 @@ if ! $ORG_ONLY; then
   _message "Creating .cursor/skills directory"
   cp -a "${oc_installedDir}/fileTemplates/.cursor" .
 
+  # Copy custom skills if configured
+  if [ -n "$oc_customSkillsPath" ] && [ -d "$oc_customSkillsPath" ]; then
+    _message "Adding custom skills from $oc_customSkillsPath"
+    # Expand ~ if present
+    expanded_path="${oc_customSkillsPath/#\~/$HOME}"
+    if [ -d "$expanded_path" ]; then
+      # Copy each subdirectory from custom skills path into .cursor/skills/
+      for skill_dir in "$expanded_path"/*/; do
+        if [ -d "$skill_dir" ]; then
+          skill_name=$(basename "$skill_dir")
+          cp -a "$skill_dir" ".cursor/skills/"
+          _message "  • Added skill: $skill_name"
+        fi
+      done
+    else
+      _message "warn" "Custom skills path not found: $expanded_path"
+    fi
+  fi
+
   # GITHUB REPO
   if $oc_github
   then
