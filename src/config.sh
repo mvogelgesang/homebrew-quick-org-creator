@@ -116,6 +116,48 @@ else
   update_or_add_var "oc_preferredIDE" "${oc_configFileName}" $preferred_ide
 fi
 
+# CUSTOM SKILLS PATH CONFIGURATION
+_message "question" "\nWould you like to configure a custom Cursor skills folder? (y/n)"
+_message "This lets you add your own skills that will be copied to new projects alongside the defaults."
+read configure_skills
+
+if [[ $configure_skills =~ ^[Yy]$ ]]; then
+  _message "question" "Enter the path to your custom skills folder (e.g., ~/my-cursor-skills):"
+  _message "The folder should contain subdirectories, each with a skill.md file."
+  read skills_path
+  
+  if [ -n "$skills_path" ]; then
+    # Expand ~ for validation
+    expanded_path="${skills_path/#\~/$HOME}"
+    if [ -d "$expanded_path" ]; then
+      update_or_add_var "oc_customSkillsPath" "${oc_configFileName}" "$skills_path"
+      _message "success" "Custom skills path set to: $skills_path"
+      
+      # Show what skills were found
+      skill_count=0
+      for skill_dir in "$expanded_path"/*/; do
+        if [ -d "$skill_dir" ] && [ -f "$skill_dir/skill.md" ]; then
+          skill_name=$(basename "$skill_dir")
+          _message "  • Found skill: $skill_name"
+          ((skill_count++))
+        fi
+      done
+      
+      if [ $skill_count -eq 0 ]; then
+        _message "warn" "No skills found. Ensure each skill is in a subdirectory with a skill.md file."
+      else
+        _message "success" "Found $skill_count custom skill(s)"
+      fi
+    else
+      _message "warn" "Directory not found: $expanded_path"
+      _message "Skipping custom skills configuration."
+    fi
+  fi
+else
+  # Clear any existing custom skills path if user says no
+  update_or_add_var "oc_customSkillsPath" "${oc_configFileName}" ""
+fi
+
 _message "success" "\nConfig file has been written to ${oc_configFileName}."
 
 # Update the config version to prevent upgrade prompts after manual config
