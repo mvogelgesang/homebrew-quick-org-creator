@@ -50,7 +50,15 @@ fi
 echo "$new_version" > "$local_version_file"
 echo "$new_version" > VERSION
 
-echo "Building local version: $new_version"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🔧 BUILDING LOCAL VERSION: $new_version"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Capture the currently installed version before we remove it
+previous_version=$(oc --version 2>/dev/null | tail -1 || echo "not installed")
+echo "📦 Previously installed: $previous_version"
+echo ""
 # --- End of Versioning Logic ---
 
 
@@ -87,10 +95,41 @@ rm -rf $backup_formula
 # Restore the original VERSION file so git doesn't see a change
 echo "$base_version" > VERSION
 
-oc --version
+# --- Validation ---
+installed_version=$(oc --version 2>&1 | tail -1)
+installed_dir="$(brew --prefix quick-org-creator)/libexec"
+installed_version_file="$installed_dir/VERSION"
 
-echo "✅ Local build installed successfully!"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ LOCAL BUILD INSTALLED"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "  Previous version:  $previous_version"
+echo "  Installed version: $installed_version"
+echo ""
+
+# Validate the install worked correctly
+if [ -f "$installed_version_file" ]; then
+  file_version=$(cat "$installed_version_file")
+  if [ "$file_version" == "$new_version" ]; then
+    echo "  ✓ VERSION file validated ($installed_version_file)"
+  else
+    echo "  ⚠ VERSION mismatch! File says '$file_version', expected '$new_version'"
+  fi
+else
+  echo "  ⚠ VERSION file not found at $installed_version_file"
+fi
+
+# Check a source file was updated by comparing timestamps
+if [ -f "$installed_dir/create.sh" ]; then
+  echo "  ✓ Source files installed ($installed_dir/)"
+else
+  echo "  ⚠ Source files not found"
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Your local changes are now active. Test with: oc"
-echo ""
-echo "To restore production version, run: ./build/restoreProd.sh"
+echo "To restore production: ./build/restoreProd.sh"
