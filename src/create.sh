@@ -292,7 +292,10 @@ if ! $ORG_ONLY; then
 
   _message "Creating GitHub Action Workflow Rules"
   mkdir -p .github/workflows
-  cp -a "${oc_installedDir}/../fileTemplates/workflows/." .github/workflows/
+  cp -a "${oc_installedDir}/fileTemplates/workflows/." .github/workflows/
+
+  _message "Creating .cursor/skills directory"
+  cp -a "${oc_installedDir}/fileTemplates/.cursor" .
 
   # GITHUB REPO
   if $oc_github
