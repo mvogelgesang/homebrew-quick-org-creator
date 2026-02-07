@@ -1,0 +1,12 @@
+{
+  "features": [
+    "Einstein1AIPlatform",
+    "EinsteinGPTForDevelopers",
+    "MarketingUser"
+  ],
+  "settings": {
+    "EinsteinGptSettings": {
+      "enableEinsteinGptPlatform": "true"
+    }
+  }
+}
