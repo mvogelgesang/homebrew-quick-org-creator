@@ -1,0 +1,10 @@
+{
+  "features": [
+    "Chatbot"
+  ],
+  "settings": {
+    "botSettings": {
+      "enableBots": true
+    }
+  }
+}

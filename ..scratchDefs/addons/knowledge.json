@@ -1,0 +1,8 @@
+{
+  "features": ["Knowledge"],
+  "settings": {
+    "knowledgeSettings": {
+      "enableKnowledge": true
+    }
+  }
+}

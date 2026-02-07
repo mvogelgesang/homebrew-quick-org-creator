@@ -1,0 +1,13 @@
+{
+  "features": [
+    "atlasPlannerPilot",
+    "agentforceMcpPilot",
+    "Einstein1AIPlatform",
+    "EinsteinGPTForDevelopers"
+  ],
+  "settings": {
+    "EinsteinGptSettings": {
+      "enableEinsteinGptPlatform": "true"
+    }
+  }
+}

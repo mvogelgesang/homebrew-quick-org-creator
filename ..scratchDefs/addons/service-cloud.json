@@ -1,0 +1,8 @@
+{
+  "features": ["ServiceCloud"],
+  "settings": {
+    "caseSettings": {
+      "systemUserEmail": "system@example.com"
+    }
+  }
+}

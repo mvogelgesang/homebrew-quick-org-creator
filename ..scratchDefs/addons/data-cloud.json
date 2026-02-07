@@ -1,0 +1,12 @@
+{
+  "features": [
+    "CustomerDataPlatform",
+    "CustomerDataPlatformLite",
+    "MarketingUser"
+  ],
+  "settings": {
+    "customerDataPlatformSettings": {
+      "enableCustomerDataPlatform": "true"
+    }
+  }
+}
