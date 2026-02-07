@@ -158,6 +158,48 @@ else
   update_or_add_var "oc_customSkillsPath" "${oc_configFileName}" ""
 fi
 
+# CUSTOM ADD-ONS PATH CONFIGURATION
+_message "question" "\nWould you like to configure a custom scratch def add-ons folder? (y/n)"
+_message "This lets you create reusable feature snippets that can be merged into any scratch definition."
+read configure_addons
+
+if [[ $configure_addons =~ ^[Yy]$ ]]; then
+  _message "question" "Enter the path to your custom add-ons folder (e.g., ~/my-scratch-addons):"
+  _message "Each .json file in this folder will appear as an add-on option during org creation."
+  read addons_path
+  
+  if [ -n "$addons_path" ]; then
+    # Expand ~ for validation
+    expanded_path="${addons_path/#\~/$HOME}"
+    if [ -d "$expanded_path" ]; then
+      update_or_add_var "oc_customAddonsPath" "${oc_configFileName}" "$addons_path"
+      _message "success" "Custom add-ons path set to: $addons_path"
+      
+      # Show what add-ons were found
+      addon_count=0
+      for addon_file in "$expanded_path"/*.json; do
+        if [ -f "$addon_file" ]; then
+          addon_name=$(basename "$addon_file" .json)
+          _message "  • Found add-on: $addon_name"
+          ((addon_count++))
+        fi
+      done
+      
+      if [ $addon_count -eq 0 ]; then
+        _message "warn" "No add-ons found. Create .json files with features/settings to merge."
+      else
+        _message "success" "Found $addon_count custom add-on(s)"
+      fi
+    else
+      _message "warn" "Directory not found: $expanded_path"
+      _message "Skipping custom add-ons configuration."
+    fi
+  fi
+else
+  # Clear any existing custom add-ons path if user says no
+  update_or_add_var "oc_customAddonsPath" "${oc_configFileName}" ""
+fi
+
 _message "success" "\nConfig file has been written to ${oc_configFileName}."
 
 # Update the config version to prevent upgrade prompts after manual config

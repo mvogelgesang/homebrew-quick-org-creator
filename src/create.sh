@@ -95,6 +95,58 @@ _message "Scratch definition set: $oc_scratchDef"
 # Store the original scratch def file for display purposes
 display_scratchDef="$oc_scratchDef"
 
+# FEATURE ADD-ONS SELECTION
+selected_addons=()
+if ! $USE_DEFAULTS; then
+  # Collect all available add-ons from bundled and custom paths
+  addon_files=()
+  addon_names=()
+  
+  # Add bundled add-ons
+  if [ -d "${oc_installedDir}/..scratchDefs/addons" ]; then
+    for addon in "${oc_installedDir}/..scratchDefs/addons/"*.json; do
+      if [ -f "$addon" ]; then
+        addon_files+=("$addon")
+        addon_names+=("$(basename "$addon" .json)")
+      fi
+    done
+  fi
+  
+  # Add custom add-ons if configured
+  if [ -n "$oc_customAddonsPath" ]; then
+    expanded_addons_path="${oc_customAddonsPath/#\~/$HOME}"
+    if [ -d "$expanded_addons_path" ]; then
+      for addon in "$expanded_addons_path/"*.json; do
+        if [ -f "$addon" ]; then
+          addon_files+=("$addon")
+          addon_names+=("$(basename "$addon" .json) (custom)")
+        fi
+      done
+    fi
+  fi
+  
+  # Show add-ons selection if any are available
+  if [ ${#addon_files[@]} -gt 0 ]; then
+    _message "question" "\nWould you like to add any features? (Enter numbers separated by spaces, or 0 to skip)"
+    for i in "${!addon_names[@]}"; do
+      printf "  %d) %s\n" "$((i+1))" "${addon_names[$i]}"
+    done
+    printf "  0) Skip - no additional features\n"
+    
+    read -p "> " addon_selection
+    
+    if [ "$addon_selection" != "0" ] && [ -n "$addon_selection" ]; then
+      # Parse space-separated numbers
+      for num in $addon_selection; do
+        if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le ${#addon_files[@]} ]; then
+          selected_addons+=("${addon_files[$((num-1))]}")
+          _message "  ✓ Adding: ${addon_names[$((num-1))]}"
+        fi
+      done
+    fi
+  fi
+fi
+
 # MERGE SCRATCH DEFINITION WITH DEFAULTS
 TMP_SCRATCH_DEF=$(mktemp)
 trap 'rm -f "$TMP_SCRATCH_DEF"' EXIT
@@ -104,6 +156,15 @@ if [ -f "$oc_defaultScratchDefFile" ]; then
   mergeScratchDef "$oc_scratchDef" "$oc_defaultScratchDefFile" "$TMP_SCRATCH_DEF"
   oc_scratchDef="$TMP_SCRATCH_DEF"
 fi
+
+# MERGE SELECTED ADD-ONS
+for addon in "${selected_addons[@]}"; do
+  _message "Merging add-on: $(basename "$addon" .json)"
+  TMP_ADDON_DEF=$(mktemp)
+  trap 'rm -f "$TMP_ADDON_DEF"' EXIT
+  mergeScratchDef "$oc_scratchDef" "$addon" "$TMP_ADDON_DEF"
+  oc_scratchDef="$TMP_ADDON_DEF"
+done
 
 # ADD RELEASE PREVIEW IF FLAG IS SET
 if $RELEASE_PREVIEW; then
