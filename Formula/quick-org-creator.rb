@@ -1,11 +1,11 @@
 class QuickOrgCreator < Formula
   desc "Script to ease the process of creating Salesforce scratch orgs"
   homepage "https://github.com/mvogelgesang/homebrew-quick-org-creator"
-  # LOCAL url "https://github.com/mvogelgesang/quick-org-creator/archive/refs/tags/v0.5.1.tar.gz"
-  # LOCAL sha256 "663f7ce132f7f597fe7c973bbf13724fa1beda6b9259442f2b5a0a26a6dea8fb"
-  url "https://github.com/mvogelgesang/quick-org-creator/archive/refs/tags/v0.5.1.tar.gz"
-  version "0.5.1"
-  sha256 "663f7ce132f7f597fe7c973bbf13724fa1beda6b9259442f2b5a0a26a6dea8fb"
+  # LOCAL url "https://github.com/mvogelgesang/quick-org-creator/archive/refs/tags/v0.6.0.tar.gz"
+  # LOCAL sha256 "6cfc69d986206b3619f92fc4d3fa194c048daa59dd6e0c46579278c413035f98"
+  url "https://github.com/mvogelgesang/quick-org-creator/archive/refs/tags/v0.6.0.tar.gz"
+  version "0.6.0"
+  sha256 "6cfc69d986206b3619f92fc4d3fa194c048daa59dd6e0c46579278c413035f98"
   license "MIT"
 
   depends_on "gh"
