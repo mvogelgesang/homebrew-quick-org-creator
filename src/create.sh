@@ -358,6 +358,11 @@ if ! $ORG_ONLY; then
   _message "Creating .cursor/skills directory"
   cp -a "${oc_installedDir}/fileTemplates/.cursor" .
 
+  _message "Configuring Claude Code worktree support"
+  cp -a "${oc_installedDir}/fileTemplates/.claude" .
+  cp "${oc_installedDir}/fileTemplates/.worktreeinclude" .
+  cat "${oc_installedDir}/fileTemplates/.gitignore-append" >> .gitignore
+
   # Copy custom skills if configured
   if [ -n "$oc_customSkillsPath" ] && [ -d "$oc_customSkillsPath" ]; then
     _message "Adding custom skills from $oc_customSkillsPath"
