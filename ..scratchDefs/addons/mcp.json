@@ -6,6 +6,9 @@
     "EinsteinGPTForDevelopers"
   ],
   "settings": {
+    "agentPlatformSettings": {
+      "enableAgentPlatform": true
+    },
     "EinsteinGptSettings": {
       "enableEinsteinGptPlatform": "true"
     }
